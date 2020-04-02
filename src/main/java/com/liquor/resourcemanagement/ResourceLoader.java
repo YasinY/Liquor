@@ -11,7 +11,6 @@ public class ResourceLoader {
 
     private static Optional<URL> getResource(String name, String extension, Class context) {
         String completeName = name + "." + extension;
-        log.debug("Gather resource: " + completeName);
         return Optional.ofNullable(context.getResource(completeName));
     }
 

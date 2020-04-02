@@ -107,7 +107,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <!-- we have to append to annotation processor paths, else maven !-->
                 </configuration>
             </plugin>
             <plugin>
