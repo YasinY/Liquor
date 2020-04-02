@@ -7,30 +7,51 @@
 <?import java.lang.*?>
 <?import org.kordamp.bootstrapfx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0"
-            prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <TabPane prefHeight="500.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane prefHeight="500.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <tabs>
                 <Tab text="Home">
-                    <fx:include fx:id="homeTabPage" source="tab/home.fxml"/>
+                   <content>
+                       <fx:include fx:id="homeTabPage" source="tab/home.fxml" />
+                   </content>
                 </Tab>
                 <Tab text="Cisco">
-                    <fx:include fx:id="ciscoTabPage" source="tab/cisco.fxml"/>
+                   <content>
+                       <fx:include fx:id="ciscoTabPage" source="tab/cisco.fxml" />
+                   </content>
                 </Tab>
                 <Tab text="VPN">
-                    <fx:include fx:id="vpnTabPage" source="tab/vpn.fxml"/>
+                   <content>
+                       <fx:include fx:id="vpnTabPage" source="tab/vpn.fxml" />
+                   </content>
                 </Tab>
                 <Tab text="Statistics">
-                    <fx:include fx:id="statisticsTabPage" source="tab/statistics.fxml"/>
+                   <content>
+                       <fx:include fx:id="statisticsTabPage" source="tab/statistics.fxml" />
+                   </content>
                 </Tab>
                 <Tab text="Terminal">
-                    <fx:include fx:id="terminalTabPage" source="tab/terminal.fxml"/>
+                   <content>
+                       <fx:include fx:id="terminalTabPage" source="tab/terminal.fxml" />
+                   </content>
                 </Tab>
                 <Tab text="Settings">
-                    <fx:include fx:id="settingsTabPage" source="tab/settings.fxml"/>
+                   <content>
+                       <fx:include fx:id="settingsTabPage" source="tab/settings.fxml" />
+                   </content>
                 </Tab>
             </tabs>
         </TabPane>
     </children>
-</AnchorPane>
+   <columnConstraints>
+      <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints />
+      <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="103.0" minHeight="10.0" prefHeight="59.0" />
+      <RowConstraints maxHeight="477.0" minHeight="73.0" prefHeight="402.0" />
+      <RowConstraints maxHeight="608.0" minHeight="39.0" prefHeight="39.0" />
+   </rowConstraints>
+</GridPane>
