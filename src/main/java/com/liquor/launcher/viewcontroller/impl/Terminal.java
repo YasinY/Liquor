@@ -1,10 +1,16 @@
 package com.liquor.launcher.viewcontroller.impl;
 
 import com.liquor.launcher.viewcontroller.ViewController;
-import javafx.scene.web.WebView;
+import org.w3c.dom.Document;
 
 public class Terminal extends ViewController {
-    public Terminal(WebView webView) {
-        super(webView);
+
+    public Terminal(Document document) {
+        super(document);
+    }
+
+    @Override
+    public void initAction() {
+
     }
 }

@@ -42,7 +42,7 @@
                   <Button id="dashboard" mnemonicParsing="false" onAction="#handleTransition" text="Settings" GridPane.rowIndex="5" />
                </children>
             </GridPane>
-            <WebView fx:id="currentView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+            <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
          </children></GridPane>
    </children>
 </AnchorPane>

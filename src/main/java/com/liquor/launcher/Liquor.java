@@ -1,7 +1,13 @@
 package com.liquor.launcher;
 
+import com.liquor.launcher.exceptions.ControllerNotFoundException;
+import com.liquor.launcher.viewcontroller.IViewController;
+import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,19 +19,21 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Optional;
 
 @Slf4j
 public class Liquor extends Application {
 
+
     @FXML
     private WebView webView;
-
 
     @FXML
     public void handleTransition(ActionEvent actionEvent) {
         if (actionEvent.getSource() instanceof Button) {
+            System.out.println("CLick!");
             Button clickedButton = (Button) actionEvent.getSource();
             String buttonName = clickedButton.getText();
             renderView(buttonName);
@@ -35,9 +43,31 @@ public class Liquor extends Application {
     public void renderView(String viewName) {
         Optional<URL> url = ResourceLoader.getHTML(viewName, Liquor.class);
         url.ifPresent(consumer -> {
-            webView.getEngine().load(consumer.toExternalForm());
-
+                initialiseWebView(viewName, consumer);
         });
+        System.out.println("Rendering view: " + viewName);
+    }
+
+    private synchronized void initialiseWebView(String viewName, URL consumer) {
+        webView.getEngine().load(consumer.toExternalForm());
+        webView.getEngine().getLoadWorker().stateProperty().addListener(new ChangeListener<Object>() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                if (newValue == Worker.State.SUCCEEDED) {
+                    initialiseViewController(viewName);
+                    webView.getEngine().getLoadWorker().stateProperty().removeListener(this);
+                }
+            }
+        });
+    }
+
+    private void initialiseViewController(String viewName) {
+        try {
+            IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
+            viewController.initAction();
+        } catch (ControllerNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
 

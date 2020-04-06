@@ -1,14 +1,17 @@
 package com.liquor.launcher.viewcontroller;
 
-import javafx.scene.web.WebView;
+import org.w3c.dom.Document;
 
-public abstract class ViewController implements IViewController {
+public class ViewController implements IViewController {
 
-    protected WebView webView;
+    protected Document document;
 
-    public ViewController(WebView webView) {
-        this.webView = webView;
+    public ViewController(Document document) {
+        this.document = document;
     }
 
+    @Override
+    public void initAction() {
 
+    }
 }
