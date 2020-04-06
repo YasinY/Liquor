@@ -12,12 +12,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @Slf4j
@@ -25,22 +28,16 @@ public class Liquor extends Application {
 
 
     @FXML
-    private AnchorPane chosenPane;
+    private WebView currentView;
 
-    private Stage currentStage;
 
     @FXML
     public void handleTransition(ActionEvent actionEvent) {
-        if(actionEvent.getSource() instanceof Button) {
+        if (actionEvent.getSource() instanceof Button) {
             Button clickedButton = (Button) actionEvent.getSource();
             String buttonName = clickedButton.getText();
-            try {
-                Optional<Scene> scene = SceneFactory.produceScene(buttonName);
-
-                scene.ifPresent(consumer -> chosenPane.getChildren().setAll(consumer.getRoot()));
-            } catch (IOException | SceneNotFoundException | MisconfiguredSceneException e) {
-                e.printStackTrace();
-            }
+            Optional<URL> url = ResourceLoader.getHTML(buttonName, Liquor.class);
+            url.ifPresent(consumer -> currentView.getEngine().load(consumer.toExternalForm()));
         }
     }
 
@@ -65,7 +62,6 @@ public class Liquor extends Application {
         currentStage.setTitle("Liquor - the professional all in one networking tool");
         currentStage.show();
         currentStage.centerOnScreen();
-        this.currentStage = currentStage;
     }
 
     public void init() {

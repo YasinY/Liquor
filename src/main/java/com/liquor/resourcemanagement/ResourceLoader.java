@@ -18,6 +18,9 @@ public class ResourceLoader {
         return getResource(name, "fxml", context);
     }
 
+    public static Optional<URL> getHTML(String name, Class context) {
+        return getResource(name, "html", context);
+    }
     public static Optional<URL> getCSS(String name, Class context) {
         return getResource(name, "css", context);
     }
