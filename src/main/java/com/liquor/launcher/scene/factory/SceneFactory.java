@@ -31,7 +31,7 @@ public class SceneFactory {
         FXMLLoader fxmlLoader = new FXMLLoader(fxml.get());
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
-
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
         return Optional.of(scene);
 
     }
