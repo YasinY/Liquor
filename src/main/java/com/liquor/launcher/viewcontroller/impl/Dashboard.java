@@ -1,9 +1,10 @@
 package com.liquor.launcher.viewcontroller.impl;
 
 import com.liquor.launcher.viewcontroller.ViewController;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
+@Slf4j
 public class Dashboard extends ViewController {
 
 
@@ -12,8 +13,7 @@ public class Dashboard extends ViewController {
     }
 
     @Override
-    public void initAction() {
-
-       System.out.println("Initialised Dashboard");
+    public void load() {
+      log.info("Dashboard action taken");
     }
 }

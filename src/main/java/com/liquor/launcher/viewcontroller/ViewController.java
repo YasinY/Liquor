@@ -11,7 +11,7 @@ public class ViewController implements IViewController {
     }
 
     @Override
-    public void initAction() {
+    public void load() {
 
     }
 }

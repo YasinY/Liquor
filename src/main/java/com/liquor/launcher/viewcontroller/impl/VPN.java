@@ -10,7 +10,7 @@ public class VPN extends ViewController {
     }
 
     @Override
-    public void initAction() {
+    public void load() {
 
     }
 }

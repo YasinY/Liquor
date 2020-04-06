@@ -11,7 +11,7 @@ public class Settings extends ViewController {
     }
 
     @Override
-    public void initAction() {
+    public void load() {
 
     }
 }

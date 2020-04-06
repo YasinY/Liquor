@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Optional;
@@ -26,14 +27,12 @@ import java.util.Optional;
 @Slf4j
 public class Liquor extends Application {
 
-
     @FXML
     private WebView webView;
 
     @FXML
     public void handleTransition(ActionEvent actionEvent) {
         if (actionEvent.getSource() instanceof Button) {
-            System.out.println("CLick!");
             Button clickedButton = (Button) actionEvent.getSource();
             String buttonName = clickedButton.getText();
             renderView(buttonName);
@@ -43,28 +42,38 @@ public class Liquor extends Application {
     public void renderView(String viewName) {
         Optional<URL> url = ResourceLoader.getHTML(viewName, Liquor.class);
         url.ifPresent(consumer -> {
-                initialiseWebView(viewName, consumer);
+            log.info("Attempting to render view..");
+            initialiseWebView(viewName, consumer);
         });
-        System.out.println("Rendering view: " + viewName);
     }
 
     private synchronized void initialiseWebView(String viewName, URL consumer) {
+        log.info("Loading view..");
         webView.getEngine().load(consumer.toExternalForm());
-        webView.getEngine().getLoadWorker().stateProperty().addListener(new ChangeListener<Object>() {
+        log.info("Adding listener..");
+        webView.getEngine().getLoadWorker().stateProperty().addListener(getChangedListener(viewName));
+    }
+
+    private ChangeListener<Object> getChangedListener(String viewName) {
+        return new ChangeListener<Object>() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 if (newValue == Worker.State.SUCCEEDED) {
+                    log.info("Initialising controller..");
                     initialiseViewController(viewName);
+                    log.info("Self-removing listener..");
                     webView.getEngine().getLoadWorker().stateProperty().removeListener(this);
                 }
             }
-        });
+        };
     }
 
     private void initialiseViewController(String viewName) {
         try {
+            log.info("Loading controller..");
             IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
-            viewController.initAction();
+            log.info("Loading controller action..");
+            viewController.load();
         } catch (ControllerNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -72,7 +81,12 @@ public class Liquor extends Application {
 
 
     @Override
-    public void start(Stage currentStage) throws Exception {
+    public void start(Stage currentStage) throws IOException {
+        log.info("Starting application..");
+        startup(currentStage);
+    }
+
+    private void startup(Stage currentStage) throws IOException {
         Optional<URL> resource = ResourceLoader.getFXML("launcher", Liquor.class);
         Optional<URL> stylesheet = ResourceLoader.getCSS("launcher", Liquor.class);
         if (resource.isPresent() && stylesheet.isPresent()) {
@@ -83,6 +97,7 @@ public class Liquor extends Application {
             root.getStylesheets().add(stylesheet.get().toExternalForm());
             Scene scene = new Scene(root);
             initScene(currentStage, scene);
+            renderView("Dashboard");
         }
     }
 
