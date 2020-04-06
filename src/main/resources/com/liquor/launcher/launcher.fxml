@@ -36,10 +36,10 @@
                <children>
                   <Button mnemonicParsing="false" onAction="#handleTransition" text="Dashboard" />
                   <Button mnemonicParsing="false" onAction="#handleTransition" text="Cisco" GridPane.rowIndex="1" />
-                  <Button mnemonicParsing="false" onAction="#handleTransition" text="Button" GridPane.rowIndex="3" />
-                  <Button mnemonicParsing="false" onAction="#handleTransition" text="Button" GridPane.rowIndex="4" />
-                  <Button mnemonicParsing="false" onAction="#handleTransition" text="Button" GridPane.rowIndex="2" />
-                  <Button id="dashboard" mnemonicParsing="false" onAction="#handleTransition" text="Button" GridPane.rowIndex="5" />
+                  <Button mnemonicParsing="false" onAction="#handleTransition" text="VPN" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" onAction="#handleTransition" text="Statistics" GridPane.rowIndex="4" />
+                  <Button mnemonicParsing="false" onAction="#handleTransition" text="Terminal" GridPane.rowIndex="2" />
+                  <Button id="dashboard" mnemonicParsing="false" onAction="#handleTransition" text="Settings" GridPane.rowIndex="5" />
                </children>
             </GridPane>
             <WebView fx:id="currentView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />

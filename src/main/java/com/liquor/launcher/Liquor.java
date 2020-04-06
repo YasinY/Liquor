@@ -1,8 +1,5 @@
 package com.liquor.launcher;
 
-import com.liquor.launcher.exceptions.MisconfiguredSceneException;
-import com.liquor.launcher.exceptions.SceneNotFoundException;
-import com.liquor.launcher.scene.factory.SceneFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -11,24 +8,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 @Slf4j
 public class Liquor extends Application {
 
-
     @FXML
-    private WebView currentView;
+    private WebView webView;
 
 
     @FXML
@@ -36,10 +28,18 @@ public class Liquor extends Application {
         if (actionEvent.getSource() instanceof Button) {
             Button clickedButton = (Button) actionEvent.getSource();
             String buttonName = clickedButton.getText();
-            Optional<URL> url = ResourceLoader.getHTML(buttonName, Liquor.class);
-            url.ifPresent(consumer -> currentView.getEngine().load(consumer.toExternalForm()));
+            renderView(buttonName);
         }
     }
+
+    public void renderView(String viewName) {
+        Optional<URL> url = ResourceLoader.getHTML(viewName, Liquor.class);
+        url.ifPresent(consumer -> {
+            webView.getEngine().load(consumer.toExternalForm());
+
+        });
+    }
+
 
     @Override
     public void start(Stage currentStage) throws Exception {
