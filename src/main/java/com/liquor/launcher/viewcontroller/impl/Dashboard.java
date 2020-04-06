@@ -13,9 +13,7 @@ public class Dashboard extends ViewController {
 
     @Override
     public void initAction() {
-        Element element = document.createElement("button");
-        element.setTextContent("LOLOLOLOLOL");
-       document.getChildNodes().item(1).appendChild(element);
+
        System.out.println("Initialised Dashboard");
     }
 }
