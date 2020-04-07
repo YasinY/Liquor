@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class WifiManager {
+public class NetworkManagerWindows {
 
     public static String NOT_SET = "NOT_SET";
 
@@ -119,17 +121,18 @@ public class WifiManager {
 
     public static String getIP() {
         String ip = NOT_SET;
+        String adapter = Locale.getDefault().getCountry().toLowerCase().equalsIgnoreCase("de") ? "\"WLAN\"" : "\"Wi-FI\"";
         try {
             ProcessBuilder builder = new ProcessBuilder(
-                    "cmd.exe", "/c", "netsh interface ip show addresses \"Wi-Fi\"");
+                    "cmd.exe", "/c", "netsh interface ip show addresses " + adapter);
             builder.redirectErrorStream(true);
             Process p = builder.start();
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             while ((line = r.readLine()) != null) {
-                //line = r.readLine();
-                if (line.contains("IP Address")) {
-                    ip = line.split("\\s+")[3];
+                System.out.println("Line: " + line);
+                if (line.contains("IP-Adresse")) {
+                    ip = line.split("\\s+")[2];
                     //System.out.println(ip);
                     return ip;
                 }
@@ -138,6 +141,25 @@ public class WifiManager {
             ex.printStackTrace();
         }
         return ip;
+    }
+
+    public static String getPublicIp() {
+        try {
+            ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "nslookup myip.opendns.com");
+            Process process = builder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+
+            while((line = reader.readLine()) != null) {
+                if(line.contains("Address")) {
+                    return line.split("\\s+")[1];
+                }
+            }
+        } catch (IOException e) {
+
+        }
+
+        return NOT_SET;
     }
 
     public static String getSubnetMask() {
