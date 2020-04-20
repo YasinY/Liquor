@@ -21,6 +21,7 @@ public class NetworkManagerWindows {
             builder.redirectErrorStream(true);
             Process p = builder.start();
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
             String line;
             while ((line = r.readLine()) != null) {
                 //line = r.readLine();
@@ -51,6 +52,9 @@ public class NetworkManagerWindows {
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             while ((line = r.readLine()) != null) {
+                if(line.contains("registered.") || line.contains("registriert.")) {
+                    return false;
+                }
                 //line = r.readLine();
                 if (line.contains("Connect state")) {
                     state = line.split("\\s+")[3];
@@ -70,7 +74,7 @@ public class NetworkManagerWindows {
     }
 
     public static String getConnectedSSID() {
-        String ssid = NOT_SET;
+        String ssid = "Kein Wi-Fi Adapter erkannt.";
         try {
             ProcessBuilder builder = new ProcessBuilder(
                     "cmd.exe", "/c", "netsh wlan show interfaces");
@@ -92,35 +96,8 @@ public class NetworkManagerWindows {
         return ssid;
     }
 
-    public static String[] getListOfSSIDs() {
-        String[] ssid_List;
-        String ssid;
-        ArrayList<String> arr = new ArrayList<>();
-        try {
-            ProcessBuilder builder = new ProcessBuilder(
-                    "cmd.exe", "/c", "netsh wlan show networks");
-            builder.redirectErrorStream(true);
-            Process p = builder.start();
-            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            while ((line = r.readLine()) != null) {
-                //line = r.readLine();
-                if (line.contains("SSID")) {
-                    ssid = line.split("\\s+")[3];
-                    //System.out.println(ssid);
-                    arr.add(ssid);
-                }
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        ssid_List = new String[arr.size()];
-        arr.toArray(ssid_List);
-        return ssid_List;
-    }
-
     public static String getIP() {
-        String ip = NOT_SET;
+        String ip = "Kein Wi-Fi Adapter erkannt.";
         String adapter = Locale.getDefault().getCountry().toLowerCase().equalsIgnoreCase("de") ? "\"WLAN\"" : "\"Wi-FI\"";
         try {
             ProcessBuilder builder = new ProcessBuilder(
@@ -130,8 +107,8 @@ public class NetworkManagerWindows {
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             while ((line = r.readLine()) != null) {
-                System.out.println("Line: " + line);
-                if (line.contains("IP-Adresse")) {
+
+                if (line.contains("IP-Ad")) {
                     ip = line.split("\\s+")[2];
                     //System.out.println(ip);
                     return ip;
@@ -184,35 +161,5 @@ public class NetworkManagerWindows {
             ex.printStackTrace();
         }
         return sb;
-    }
-
-    public static String getBroadcast() {
-        String subnetMask = getSubnetMask();
-        String ip = getIP();
-
-        String[] arrSubnetMask = subnetMask.split("\\.");
-        String[] arrIP = ip.split("\\.");
-        int[] networkAddress = new int[4];
-        int[] broadcastAddress = new int[4];
-
-        String broadcast = "";
-
-        for (int i = 0; i < 4; i++) {
-            networkAddress[i] = Integer.parseInt(arrIP[i]) & Integer.parseInt(arrSubnetMask[i]);
-            //System.out.println(networkAddress[i]);
-        }
-
-        for (int i = 0; i < 4; i++) {
-            //broadcastAddress[i] =  networkAddress[i] | (~Integer.parseInt(arrSubnetMask[i]) & 0xff);
-            //System.out.println(broadcastAddress[i]);
-            broadcast = broadcast + "." + (networkAddress[i] | (~Integer.parseInt(arrSubnetMask[i]) & 0xff));
-        }
-
-//        System.out.println(broadcast.substring(1));
-
-        //mask AND ip you get network address
-        //Invert Mask OR Network Address you get broadcast
-
-        return broadcast.substring(1);
     }
 }

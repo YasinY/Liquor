@@ -19,11 +19,11 @@ public enum RegisteredController {
         this.referencedClass = referencedClass;
     }
 
-    public static Optional<RegisteredController> find(String name) {
-        return Stream.of(values()).filter(value -> value.name().equalsIgnoreCase(name)).findFirst();
-    }
-
     public Class<?> getReferencedClass() {
         return referencedClass;
+    }
+
+    public static Optional<RegisteredController> find(String name) {
+        return Stream.of(values()).filter(value -> value.name().equalsIgnoreCase(name)).findFirst();
     }
 }

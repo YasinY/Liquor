@@ -6,6 +6,10 @@ public class ViewController implements IViewController {
 
     protected Document document;
 
+    public ViewController() {
+
+    }
+
     public ViewController(Document document) {
         this.document = document;
     }

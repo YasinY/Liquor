@@ -19,6 +19,21 @@ public class ViewControllerFactory {
         return produceViewController(registeredController.get(), document);
     }
 
+    public static IViewController produceViewController(String name) throws ControllerNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Optional<RegisteredController> registeredController = RegisteredController.find(name);
+        if(!registeredController.isPresent()) {
+            throw new ControllerNotFoundException("Could not find controller");
+        }
+
+        return produceViewController(registeredController.get());
+    }
+
+    public static IViewController produceViewController(RegisteredController controller)
+            throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+        Constructor<?> constructor = controller.getReferencedClass().getConstructor();
+        return (IViewController) constructor.newInstance();
+    }
+
     public static IViewController produceViewController(RegisteredController controller, Document document)
             throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         Constructor<?> constructor = controller.getReferencedClass().getConstructor(Document.class);

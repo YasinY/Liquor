@@ -2,6 +2,7 @@ package com.liquor.launcher;
 
 import com.liquor.launcher.exceptions.ControllerNotFoundException;
 import com.liquor.launcher.viewcontroller.IViewController;
+import com.liquor.launcher.viewcontroller.RegisteredController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
 import javafx.application.Application;
@@ -14,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -31,20 +34,48 @@ public class Liquor extends Application {
     private WebView webView;
 
     @FXML
+    private AnchorPane nativeView;
+
+    @FXML
     public void handleTransition(ActionEvent actionEvent) {
         if (actionEvent.getSource() instanceof Button) {
             Button clickedButton = (Button) actionEvent.getSource();
             String buttonName = clickedButton.getText();
-            renderView(buttonName);
+            renderView(buttonName, buttonName.equalsIgnoreCase("terminal"));
         }
     }
 
-    public void renderView(String viewName) {
+    public void renderView(String viewName, boolean nativeView) {
         Optional<URL> url = ResourceLoader.getHTML(viewName, Liquor.class);
         url.ifPresent(consumer -> {
-            log.info("Attempting to render view..");
+            if (this.nativeView.isVisible()) {
+                this.nativeView.setVisible(false);
+            }
+            if (!webView.isVisible()) {
+                webView.setVisible(true);
+            }
+            log.info("Attempting to render view " + viewName + " ..");
             initialiseWebView(viewName, consumer);
         });
+        if (nativeView) {
+            Optional<URL> fxml = ResourceLoader.getFXML(viewName, RegisteredController.find(viewName).get().getReferencedClass());
+            if (fxml.isPresent()) {
+                try {
+                    webView.setVisible(false);
+                    AnchorPane loadedContent = new FXMLLoader(fxml.get()).load();
+                    List<?> list = loadedContent.getChildren();
+                    this.nativeView.getChildren().setAll(loadedContent.getChildren());
+                    this.nativeView.setVisible(true);
+                    this.initialiseNativeViewController(viewName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void drawNativePane() {
+
     }
 
     private synchronized void initialiseWebView(String viewName, URL consumer) {
@@ -66,6 +97,17 @@ public class Liquor extends Application {
                 }
             }
         };
+    }
+
+    private void initialiseNativeViewController(String viewName) {
+
+        try {
+            IViewController nativeViewController = ViewControllerFactory.produceViewController(viewName);
+
+            nativeViewController.load();
+        } catch (ControllerNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initialiseViewController(String viewName) {
@@ -97,7 +139,7 @@ public class Liquor extends Application {
             root.getStylesheets().add(stylesheet.get().toExternalForm());
             Scene scene = new Scene(root);
             initScene(currentStage, scene);
-            renderView("Dashboard");
+            renderView("Dashboard", false);
         }
     }
 
