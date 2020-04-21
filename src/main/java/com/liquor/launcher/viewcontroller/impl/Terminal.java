@@ -19,8 +19,7 @@ public class Terminal extends ViewController {
         TerminalConfig darkConfig = new TerminalConfig();
         darkConfig.setBackgroundColor(Color.rgb(16, 16, 16));
         darkConfig.setForegroundColor(Color.rgb(240, 240, 240));
-        darkConfig.setCursorColor(Color.rgb(255, 0, 0, 0.5));
-
+        darkConfig.setCursorColor(Color.rgb(0, 255, 0, 0.5));
         TerminalBuilder terminalBuilder = new TerminalBuilder(darkConfig);
         TerminalTab terminal = terminalBuilder.newTerminal();
         this.tabPane.getTabs().add(terminal);

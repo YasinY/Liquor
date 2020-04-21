@@ -39,58 +39,37 @@ public class Liquor extends Application {
     public void handleTransition(ActionEvent actionEvent) {
         if (actionEvent.getSource() instanceof Button) {
             Button clickedButton = (Button) actionEvent.getSource();
-            String buttonName = clickedButton.getText();
-            renderView(buttonName, buttonName.equalsIgnoreCase("terminal"));
+            String viewName = clickedButton.getText();
+            renderView(viewName, viewName.equalsIgnoreCase("terminal"));
         }
     }
 
     public void renderView(String viewName, boolean nativeView) {
         if (nativeView) {
-            registerNativeView(viewName);
+            log.info("Attempting to render native view..");
+            associateController(viewName);
             return;
         }
-        registerWebView(viewName);
+        log.info("Attempting to render web view..");
+        initialiseWebView(viewName);
     }
 
-    private void registerWebView(String viewName) {
+    private void initialiseWebView(String viewName) {
         Optional<URL> url = ResourceLoader.getHTML(viewName, Liquor.class);
         url.ifPresent(consumer -> {
-            if (this.nativeView.isVisible()) {
-                this.nativeView.setVisible(false);
-            }
-            if (!webView.isVisible()) {
-                webView.setVisible(true);
-            }
-            log.info("Attempting to render view " + viewName + " ..");
+            setVisibilities();
             initialiseWebView(viewName, consumer);
         });
     }
 
-    private void registerNativeView(String viewName) {
-        Optional<RegisteredController> registeredController = RegisteredController.find(viewName);
-        if (registeredController.isPresent()) {
-            Optional<URL> fxml = ResourceLoader.getFXML(viewName, registeredController.get().getReferencedClass());
-            if (fxml.isPresent()) {
-                try {
-                    webView.setVisible(false);
-                    FXMLLoader loader = new FXMLLoader(fxml.get());
-                    AnchorPane loadedContent = loader.load();
-                    if (loader.getController() != null && loader.getController() instanceof IViewController) {
-                        IViewController controller = loader.getController();
-                        controller.load();
-                    }
-                    this.nativeView.getChildren().setAll(loadedContent.getChildren());
-                    this.nativeView.setVisible(true);
-                    //this.initialiseNativeViewController(viewName);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+    private void setVisibilities() {
+        log.info("Ensuring visibility ..");
+        if (this.nativeView.isVisible()) {
+            this.nativeView.setVisible(false);
         }
-    }
-
-    private void drawNativePane() {
-
+        if (!webView.isVisible()) {
+            webView.setVisible(true);
+        }
     }
 
     private synchronized void initialiseWebView(String viewName, URL consumer) {
@@ -98,6 +77,42 @@ public class Liquor extends Application {
         webView.getEngine().load(consumer.toExternalForm());
         log.info("Adding listener..");
         webView.getEngine().getLoadWorker().stateProperty().addListener(getChangedListener(viewName));
+    }
+
+    private void associateController(String viewName) {
+        log.info("Finding controller..");
+        Optional<RegisteredController> potentialController = RegisteredController.find(viewName);
+        if (potentialController.isPresent()) {
+            RegisteredController registeredController = potentialController.get();
+            Optional<URL> potentialFxml = ResourceLoader.getFXML(viewName, registeredController.getReferencedClass());
+            log.info("Trying to find fxml file..");
+            if (potentialFxml.isPresent()) {
+                URL fxml = potentialFxml.get();
+                try {
+                    log.info("Loading fxml file-content..");
+                    FXMLLoader loader = new FXMLLoader(fxml);
+                    AnchorPane loadedContent = loader.load();
+                    loadViewController(loader);
+                    appendNativeWindow(loadedContent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void loadViewController(FXMLLoader loader) {
+        log.info("Loading native view controller..");
+        if (loader.getController() != null && loader.getController() instanceof IViewController) {
+            IViewController viewController = loader.getController();
+            viewController.load();
+        }
+    }
+
+    private void appendNativeWindow(AnchorPane loadedContent) {
+        webView.setVisible(false);
+        this.nativeView.getChildren().setAll(loadedContent.getChildren());
+        this.nativeView.setVisible(true);
     }
 
     private ChangeListener<Object> getChangedListener(String viewName) {
