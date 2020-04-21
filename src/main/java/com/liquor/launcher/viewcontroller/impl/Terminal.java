@@ -23,7 +23,6 @@ public class Terminal extends ViewController {
 
         TerminalBuilder terminalBuilder = new TerminalBuilder(darkConfig);
         TerminalTab terminal = terminalBuilder.newTerminal();
-
         this.tabPane.getTabs().add(terminal);
     }
 }

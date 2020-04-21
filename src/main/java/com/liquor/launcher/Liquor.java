@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -46,6 +45,14 @@ public class Liquor extends Application {
     }
 
     public void renderView(String viewName, boolean nativeView) {
+        if (nativeView) {
+            registerNativeView(viewName);
+            return;
+        }
+        registerWebView(viewName);
+    }
+
+    private void registerWebView(String viewName) {
         Optional<URL> url = ResourceLoader.getHTML(viewName, Liquor.class);
         url.ifPresent(consumer -> {
             if (this.nativeView.isVisible()) {
@@ -57,16 +64,24 @@ public class Liquor extends Application {
             log.info("Attempting to render view " + viewName + " ..");
             initialiseWebView(viewName, consumer);
         });
-        if (nativeView) {
-            Optional<URL> fxml = ResourceLoader.getFXML(viewName, RegisteredController.find(viewName).get().getReferencedClass());
+    }
+
+    private void registerNativeView(String viewName) {
+        Optional<RegisteredController> registeredController = RegisteredController.find(viewName);
+        if (registeredController.isPresent()) {
+            Optional<URL> fxml = ResourceLoader.getFXML(viewName, registeredController.get().getReferencedClass());
             if (fxml.isPresent()) {
                 try {
                     webView.setVisible(false);
-                    AnchorPane loadedContent = new FXMLLoader(fxml.get()).load();
-                    List<?> list = loadedContent.getChildren();
+                    FXMLLoader loader = new FXMLLoader(fxml.get());
+                    AnchorPane loadedContent = loader.load();
+                    if (loader.getController() != null && loader.getController() instanceof IViewController) {
+                        IViewController controller = loader.getController();
+                        controller.load();
+                    }
                     this.nativeView.getChildren().setAll(loadedContent.getChildren());
                     this.nativeView.setVisible(true);
-                    this.initialiseNativeViewController(viewName);
+                    //this.initialiseNativeViewController(viewName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
