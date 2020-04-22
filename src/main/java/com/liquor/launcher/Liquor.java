@@ -2,6 +2,7 @@ package com.liquor.launcher;
 
 import com.liquor.launcher.annotations.Native;
 import com.liquor.launcher.functionality.profile.Profile;
+import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.FileSystem;
@@ -97,7 +98,7 @@ public class Liquor extends Application {
         log.info("Loading view controller..");
         IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
         if (viewController.getClass().isAnnotationPresent(Native.class)) {
-            log.error("Aborted loading controller " + viewName + " as it has been marked as native.");
+            log.error("Aborted loading controller for " + viewName + " as it has been marked as native.");
             return;
         }
         viewController.load();
@@ -139,8 +140,8 @@ public class Liquor extends Application {
 
     @Override
     public void start(Stage currentStage) throws IOException {
-
-        FileSystem.writeContent(RegisteredResource.PROFILE, false, "fak");
+        ProfileManager.getInstance().load();
+        System.out.println(ProfileManager.getInstance().getSelectedProfile().toString());
         log.info("Starting application.. ");
         startup(currentStage);
     }

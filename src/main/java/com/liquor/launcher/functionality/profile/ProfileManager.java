@@ -1,6 +1,8 @@
 package com.liquor.launcher.functionality.profile;
 
 import com.google.gson.Gson;
+import com.liquor.resourcemanagement.FileSystem;
+import com.liquor.resourcemanagement.registered.RegisteredResource;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -10,22 +12,24 @@ public class ProfileManager {
 
     private Profile selectedProfile;
 
+    private Gson gson;
 
-    public boolean serialize() {
+    private ProfileManager() {
+        this.gson = new Gson();
+    }
+
+    public boolean save() {
         if (selectedProfile == null) {
             log.error("Unspecified profile, can't serialize.");
             return false;
         }
-        new Gson().toJson(selectedProfile);
+        String profile = gson.toJson(selectedProfile);
+        FileSystem.writeContent(RegisteredResource.PROFILE, false, profile);
         return true;
     }
 
-    public boolean deserialize() {
-        if(selectedProfile == null) {
-            log.error("Unspecified profile, can't deserialize.");
-            return false;
-        }
-
+    public boolean load() {
+        this.selectedProfile = gson.fromJson(FileSystem.readFirstLine(RegisteredResource.PROFILE), Profile.class);
         return true;
     }
 
