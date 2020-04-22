@@ -3,16 +3,17 @@ package com.liquor.launcher.viewcontroller.impl;
 import com.kodedu.terminalfx.TerminalBuilder;
 import com.kodedu.terminalfx.TerminalTab;
 import com.kodedu.terminalfx.config.TerminalConfig;
+import com.liquor.launcher.annotations.Native;
 import com.liquor.launcher.viewcontroller.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.paint.Color;
 
+@Native
 public class Terminal extends ViewController {
 
     @FXML
     private TabPane tabPane;
-
 
     @Override
     public void load() {

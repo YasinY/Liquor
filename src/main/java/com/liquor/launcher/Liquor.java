@@ -1,8 +1,8 @@
 package com.liquor.launcher;
 
+import com.liquor.launcher.annotations.Native;
 import com.liquor.launcher.exceptions.ControllerNotFoundException;
 import com.liquor.launcher.viewcontroller.IViewController;
-import com.liquor.launcher.viewcontroller.RegisteredController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
 import javafx.application.Application;
@@ -79,24 +79,48 @@ public class Liquor extends Application {
         webView.getEngine().getLoadWorker().stateProperty().addListener(getChangedListener(viewName));
     }
 
+    private ChangeListener<Object> getChangedListener(String viewName) {
+        return new ChangeListener<Object>() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                if (newValue == Worker.State.SUCCEEDED) {
+                    log.info("Initialising controller..");
+                    initialiseViewController(viewName);
+                    webView.getEngine().getLoadWorker().stateProperty().removeListener(this);
+                }
+            }
+        };
+    }
+
+    private void initialiseViewController(String viewName) {
+        try {
+            log.info("Loading view controller..");
+            IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
+            if (viewController.getClass().isAnnotationPresent(Native.class)) {
+                log.error("Aborted loading view " + viewName + " as it has been marked as native.");
+                return;
+            }
+            viewController.load();
+        } catch (ControllerNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void associateController(String viewName) {
         log.info("Finding controller..");
-        Optional<RegisteredController> potentialController = RegisteredController.find(viewName);
-        if (potentialController.isPresent()) {
-            RegisteredController registeredController = potentialController.get();
-            Optional<URL> potentialFxml = ResourceLoader.getFXML(viewName, registeredController.getReferencedClass());
-            log.info("Trying to find fxml file..");
-            if (potentialFxml.isPresent()) {
-                URL fxml = potentialFxml.get();
-                try {
-                    log.info("Loading fxml file-content..");
-                    FXMLLoader loader = new FXMLLoader(fxml);
-                    AnchorPane loadedContent = loader.load();
-                    loadViewController(loader);
-                    appendNativeWindow(loadedContent);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        IViewController registeredController = ViewControllerFactory.produceViewController(viewName);
+        Optional<URL> potentialFxml = ResourceLoader.getFXML(viewName, registeredController.getClass());
+        log.info("Trying to find fxml file..");
+        if (potentialFxml.isPresent()) {
+            URL fxml = potentialFxml.get();
+            try {
+                log.info("Loading fxml file-content..");
+                FXMLLoader loader = new FXMLLoader(fxml);
+                AnchorPane loadedContent = loader.load();
+                loadViewController(loader);
+                appendNativeWindow(loadedContent);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -113,42 +137,6 @@ public class Liquor extends Application {
         webView.setVisible(false);
         this.nativeView.getChildren().setAll(loadedContent.getChildren());
         this.nativeView.setVisible(true);
-    }
-
-    private ChangeListener<Object> getChangedListener(String viewName) {
-        return new ChangeListener<Object>() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                if (newValue == Worker.State.SUCCEEDED) {
-                    log.info("Initialising controller..");
-                    initialiseViewController(viewName);
-                    log.info("Self-removing listener..");
-                    webView.getEngine().getLoadWorker().stateProperty().removeListener(this);
-                }
-            }
-        };
-    }
-
-    private void initialiseNativeViewController(String viewName) {
-
-        try {
-            IViewController nativeViewController = ViewControllerFactory.produceViewController(viewName);
-
-            nativeViewController.load();
-        } catch (ControllerNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void initialiseViewController(String viewName) {
-        try {
-            log.info("Loading controller..");
-            IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
-            log.info("Loading controller action..");
-            viewController.load();
-        } catch (ControllerNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
     }
 
 
