@@ -1,6 +1,5 @@
 package com.liquor.launcher.viewcontroller;
 
-import com.liquor.launcher.exceptions.ControllerNotFoundException;
 import com.liquor.launcher.viewcontroller.impl.Default;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
@@ -13,11 +12,11 @@ import java.util.Optional;
 public class ViewControllerFactory {
 
 
-    public static IViewController produceViewController(String name, Document document)
-            throws ControllerNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public static IViewController produceViewController(String name, Document document) {
         Optional<RegisteredController> registeredController = RegisteredController.find(name);
         if (!registeredController.isPresent()) {
-            throw new ControllerNotFoundException("Could not find controller");
+            log.error("Could not find registered view controller " + name);
+            return new Default();
         }
         return produceViewController(registeredController.get(), document);
     }

@@ -1,10 +1,12 @@
 package com.liquor.launcher;
 
 import com.liquor.launcher.annotations.Native;
-import com.liquor.launcher.exceptions.ControllerNotFoundException;
+import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
+import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.ResourceLoader;
+import com.liquor.resourcemanagement.registered.RegisteredResource;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,7 +24,6 @@ import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Optional;
 
@@ -93,17 +94,13 @@ public class Liquor extends Application {
     }
 
     private void initialiseViewController(String viewName) {
-        try {
-            log.info("Loading view controller..");
-            IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
-            if (viewController.getClass().isAnnotationPresent(Native.class)) {
-                log.error("Aborted loading view " + viewName + " as it has been marked as native.");
-                return;
-            }
-            viewController.load();
-        } catch (ControllerNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
+        log.info("Loading view controller..");
+        IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
+        if (viewController.getClass().isAnnotationPresent(Native.class)) {
+            log.error("Aborted loading controller " + viewName + " as it has been marked as native.");
+            return;
         }
+        viewController.load();
     }
 
     private void associateController(String viewName) {
@@ -142,7 +139,9 @@ public class Liquor extends Application {
 
     @Override
     public void start(Stage currentStage) throws IOException {
-        log.info("Starting application..");
+
+        FileSystem.writeContent(RegisteredResource.PROFILE, false, "fak");
+        log.info("Starting application.. ");
         startup(currentStage);
     }
 
