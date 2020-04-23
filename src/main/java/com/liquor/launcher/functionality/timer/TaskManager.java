@@ -11,12 +11,13 @@ public class TaskManager {
     private static TaskManager instance;
 
     public void init() {
-        Set<Class<? extends ITask>> subTypes = new Reflections("com.liquor.launcher.functionality.timer.impl").getSubTypesOf(ITask.class);
+        final String PACKAGE_TO_TASKS = "com.liquor.launcher.functionality.timer.impl";
+        Set<Class<? extends ITask>> subTypes = new Reflections(PACKAGE_TO_TASKS).getSubTypesOf(ITask.class);
         subTypes.forEach(referencedClass -> {
             try {
                 referencedClass.newInstance().init();
             } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                log.error("Error initialising class " + referencedClass.getName());
             }
         });
         log.info("Initialised " + subTypes.size() + " tasks");
