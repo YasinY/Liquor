@@ -5,6 +5,8 @@ import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 @Slf4j
 public class ProfileManager {
 
@@ -33,8 +35,8 @@ public class ProfileManager {
         return true;
     }
 
-    public Profile getSelectedProfile() {
-        return selectedProfile;
+    public Optional<Profile> getSelectedProfile() {
+        return Optional.ofNullable(selectedProfile);
     }
 
     public void setSelectedProfile(Profile selectedProfile) {

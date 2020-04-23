@@ -1,7 +1,6 @@
 package com.liquor.launcher.functionality.profile;
 
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.liquor.launcher.functionality.theme.Theme;
 import lombok.Builder;
@@ -15,7 +14,7 @@ public class Profile {
 
     @Builder.Default
     @SerializedName("total-time-spent")
-    private long totalTime = 0;
+    private int totalTime = 0;
 
     @Builder.Default
     @SerializedName("selected-theme")
@@ -29,6 +28,18 @@ public class Profile {
     @Override
     public int hashCode() {
         return -1;
+    }
+
+    public int getSeconds() {
+        return totalTime * 60;
+    }
+
+    public int getMinutes() {
+        return totalTime;
+    }
+
+    public int getHours() {
+        return totalTime / 60;
     }
 
 }

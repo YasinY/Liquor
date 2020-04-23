@@ -3,6 +3,8 @@ package com.liquor.launcher;
 import com.liquor.launcher.annotations.Native;
 import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
+import com.liquor.launcher.functionality.timer.ITask;
+import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.FileSystem;
@@ -23,10 +25,12 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
+import org.reflections.Reflections;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 public class Liquor extends Application {
@@ -140,8 +144,6 @@ public class Liquor extends Application {
 
     @Override
     public void start(Stage currentStage) throws IOException {
-        ProfileManager.getInstance().load();
-        System.out.println(ProfileManager.getInstance().getSelectedProfile().toString());
         log.info("Starting application.. ");
         startup(currentStage);
     }
@@ -159,6 +161,7 @@ public class Liquor extends Application {
             initScene(currentStage, scene);
             renderView("Dashboard", false);
         }
+        TaskManager.getInstance().init();
     }
 
     private void initScene(Stage currentStage, Scene scene) {
