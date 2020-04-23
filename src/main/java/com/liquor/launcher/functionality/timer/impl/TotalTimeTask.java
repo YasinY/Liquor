@@ -14,9 +14,9 @@ public class TotalTimeTask implements ITask {
     private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     public void init() {
-        scheduledExecutorService.schedule(() -> {
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
             Optional<Profile> potentialProfile = ProfileManager.getInstance().getSelectedProfile();
             potentialProfile.ifPresent(profile -> profile.setTotalTime(profile.getTotalTime() + 1));
-        }, 1, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.MINUTES);
     }
 }
