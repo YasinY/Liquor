@@ -31,6 +31,8 @@ import java.util.Optional;
 @Slf4j
 public class Liquor extends Application {
 
+    public static Scene scene;
+
     @FXML
     private WebView webView;
 
@@ -151,13 +153,14 @@ public class Liquor extends Application {
             log.error("Couldn't find stylesheet");
             return;
         }
+        URL stylesheet = potentialStylesheet.get();
         if (!potentialResource.isPresent()) {
             log.error("Couldn't find resource");
             return;
         }
-        URL stylesheet = potentialStylesheet.get();
-        stylesheet = assignDarkThemeIfPossible(stylesheet); //this is bad tbh, whatever
         URL resource = potentialResource.get();
+
+        stylesheet = assignDarkThemeIfPossible(stylesheet); //this is bad tbh, whatever
         Scene scene = createScene(currentStage, stylesheet, resource);
         initScene(currentStage, scene);
         renderView("Dashboard", false);
@@ -178,7 +181,8 @@ public class Liquor extends Application {
         if (potentialProfile.isPresent()) {
             Profile profile = potentialProfile.get();
             if (profile.getTheme() == Theme.DARK) {
-                Optional<URL> potentialDarkStylesheet = ResourceLoader.getCSS("launcher_dark", Liquor.class);
+                log.info("Initialising dark theme..");
+                Optional<URL> potentialDarkStylesheet = ResourceLoader.getCSS(Theme.DARK.getName(), Liquor.class);
                 if(potentialDarkStylesheet.isPresent()) {
                     stylesheet = potentialDarkStylesheet.get();
                 }
@@ -188,11 +192,13 @@ public class Liquor extends Application {
     }
 
     private void initScene(Stage currentStage, Scene scene) {
+        Liquor.scene = scene;
         currentStage.setScene(scene);
         currentStage.setResizable(false);
         currentStage.setTitle("Liquor - the professional all in one networking tool");
         currentStage.show();
         currentStage.centerOnScreen();
+
     }
 
     public void init() {

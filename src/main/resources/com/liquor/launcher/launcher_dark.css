@@ -1,0 +1,6 @@
+* {
+    -fx-font-family: 'Roboto', sans-serif;
+}
+GridPane {
+    -fx-background-color: #21252B;
+}
