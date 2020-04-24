@@ -3,4 +3,6 @@
 }
 GridPane {
     -fx-background-color: #21252B;
+    -fx-grid-lines-visible: true;
+    -fx-border-color: white;
 }
