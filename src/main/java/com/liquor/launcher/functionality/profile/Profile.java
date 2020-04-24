@@ -30,6 +30,11 @@ public class Profile {
         return -1;
     }
 
+    public Theme switchTheme() {
+        this.theme = this.theme == Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
+        return this.theme;
+    }
+
     public int getSeconds() {
         return totalTime * 60;
     }

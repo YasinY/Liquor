@@ -3,13 +3,11 @@ package com.liquor.launcher;
 import com.liquor.launcher.annotations.Native;
 import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
-import com.liquor.launcher.functionality.timer.ITask;
+import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
-import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.ResourceLoader;
-import com.liquor.resourcemanagement.registered.RegisteredResource;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,12 +23,10 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
-import org.reflections.Reflections;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 public class Liquor extends Application {
@@ -50,7 +46,7 @@ public class Liquor extends Application {
         }
     }
 
-    public void renderView(String viewName, boolean nativeView) {
+    private void renderView(String viewName, boolean nativeView) {
         if (nativeView) {
             log.info("Attempting to render native view..");
             associateController(viewName);
@@ -149,19 +145,46 @@ public class Liquor extends Application {
     }
 
     private void startup(Stage currentStage) throws IOException {
-        Optional<URL> resource = ResourceLoader.getFXML("launcher", Liquor.class);
-        Optional<URL> stylesheet = ResourceLoader.getCSS("launcher", Liquor.class);
-        if (resource.isPresent() && stylesheet.isPresent()) {
-            currentStage.initStyle(StageStyle.UNDECORATED);
-            FXMLLoader fxmlLoader = new FXMLLoader(resource.get());
-            fxmlLoader.setController(this);
-            Parent root = fxmlLoader.load();
-            root.getStylesheets().add(stylesheet.get().toExternalForm());
-            Scene scene = new Scene(root);
-            initScene(currentStage, scene);
-            renderView("Dashboard", false);
+        Optional<URL> potentialResource = ResourceLoader.getFXML("launcher", Liquor.class);
+        Optional<URL> potentialStylesheet = ResourceLoader.getCSS("launcher", Liquor.class);
+        if (!potentialStylesheet.isPresent()) {
+            log.error("Couldn't find stylesheet");
+            return;
         }
+        if (!potentialResource.isPresent()) {
+            log.error("Couldn't find resource");
+            return;
+        }
+        URL stylesheet = potentialStylesheet.get();
+        stylesheet = assignDarkThemeIfPossible(stylesheet); //this is bad tbh, whatever
+        URL resource = potentialResource.get();
+        Scene scene = createScene(currentStage, stylesheet, resource);
+        initScene(currentStage, scene);
+        renderView("Dashboard", false);
         TaskManager.getInstance().init();
+    }
+
+    private Scene createScene(Stage currentStage, URL stylesheet, URL resource) throws IOException {
+        currentStage.initStyle(StageStyle.UNDECORATED);
+        FXMLLoader fxmlLoader = new FXMLLoader(resource);
+        fxmlLoader.setController(this);
+        Parent root = fxmlLoader.load();
+        root.getStylesheets().add(stylesheet.toExternalForm());
+        return new Scene(root);
+    }
+
+    private URL assignDarkThemeIfPossible(URL stylesheet) {
+        Optional<Profile> potentialProfile = ProfileManager.getInstance().getSelectedProfile();
+        if (potentialProfile.isPresent()) {
+            Profile profile = potentialProfile.get();
+            if (profile.getTheme() == Theme.DARK) {
+                Optional<URL> potentialDarkStylesheet = ResourceLoader.getCSS("launcher_dark", Liquor.class);
+                if(potentialDarkStylesheet.isPresent()) {
+                    stylesheet = potentialDarkStylesheet.get();
+                }
+            }
+        }
+        return stylesheet;
     }
 
     private void initScene(Stage currentStage, Scene scene) {
@@ -173,7 +196,6 @@ public class Liquor extends Application {
     }
 
     public void init() {
-
     }
 
     public static void main(String[] args) {

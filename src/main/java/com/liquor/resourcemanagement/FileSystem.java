@@ -7,11 +7,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,7 +21,7 @@ public class FileSystem {
         ensureDirectories(resource, parentDirectoriesPath);
         Path resourcePath = parentDirectoriesPath.resolve(resource.getFileStructure());
         File resourceFile = resourcePath.toFile();
-        ensureFileExistance(resourcePath, resourceFile);
+        ensureFileExistence(resourcePath, resourceFile);
         writeContentToFile(append, resourcePath, content);
     }
 
@@ -36,7 +33,7 @@ public class FileSystem {
         }
     }
 
-    private static void ensureFileExistance(Path resourcePath, File resourceFile) {
+    private static void ensureFileExistence(Path resourcePath, File resourceFile) {
         if (!Files.exists(resourcePath)) {
             try {
                 boolean creationSuccessful = resourceFile.createNewFile();

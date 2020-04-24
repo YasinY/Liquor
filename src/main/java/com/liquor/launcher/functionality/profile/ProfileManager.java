@@ -36,6 +36,9 @@ public class ProfileManager {
     }
 
     public Optional<Profile> getSelectedProfile() {
+        if(selectedProfile == null) {
+            load();
+        }
         return Optional.ofNullable(selectedProfile);
     }
 
