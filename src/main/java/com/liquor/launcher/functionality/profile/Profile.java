@@ -38,7 +38,7 @@ public class Profile {
     public Theme switchTheme() {
         Liquor.scene.getStylesheets().removeAll();
         this.theme = this.theme == Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
-        Optional<URL> potentialSheet = ResourceLoader.getCSS(theme.getName(), Liquor.class);
+        Optional<URL> potentialSheet = ResourceLoader.getCSS(theme.getName());
         potentialSheet.ifPresent(stylesheet -> Liquor.scene.getStylesheets().add(stylesheet.toExternalForm()));
         return this.theme;
     }

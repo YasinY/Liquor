@@ -1,0 +1,16 @@
+* {
+    -fx-font-family: 'Roboto', sans-serif;
+}
+GridPane {
+    -fx-background-color: #383b3e;
+    -fx-grid-lines-visible: true;
+    -fx-border-color: white;
+}
+.tab-pane *.tab-header-background  {
+    -fx-background-color: -fx-outer-border, -fx-inner-border, derive(#383b3e, -20%);
+    -fx-effect: innershadow(two-pass-box , rgba(0,0,0,0.6) , 4, 0.0 , 0 , 0);
+}
+.tab-pane *.tab-header-area {
+    -fx-background-color: black;
+    -fx-effect: innershadow(two-pass-box , rgba(0,0,0,0.6) , 4, 0.0 , 0 , 0);
+}

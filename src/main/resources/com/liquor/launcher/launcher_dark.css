@@ -1,8 +1,27 @@
 * {
     -fx-font-family: 'Roboto', sans-serif;
 }
+
 GridPane {
     -fx-background-color: #21252B;
-    -fx-grid-lines-visible: true;
-    -fx-border-color: white;
+    -fx-border-width: 0;
+}
+
+.tab-pane {
+    -fx-border-width: 0;
+}
+
+.tab-pane *.tab-header-background {
+    -fx-background-color: transparent;
+    -fx-effect: innershadow(two-pass-box, rgba(0, 0, 0, 0.6), 4, 0.0, 0, 0);
+    -fx-border-width: 0;
+}
+.tab-pane .tab {
+    -fx-border-width: 0;
+    -fx-background-color: -fx-outer-border, -fx-inner-border, derive(#b9bbbe, -20%);
+}
+
+.button {
+    -fx-background-color: #b9bbbe;
+    -fx-text-fill: black;
 }

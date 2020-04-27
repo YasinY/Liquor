@@ -59,7 +59,7 @@ public class Liquor extends Application {
     }
 
     private void initialiseWebView(String viewName) {
-        Optional<URL> url = ResourceLoader.getHTML(viewName, Liquor.class);
+        Optional<URL> url = ResourceLoader.getHTML(viewName);
         url.ifPresent(consumer -> {
             setVisibilities();
             initialiseWebView(viewName, consumer);
@@ -147,8 +147,8 @@ public class Liquor extends Application {
     }
 
     private void startup(Stage currentStage) throws IOException {
-        Optional<URL> potentialResource = ResourceLoader.getFXML("launcher", Liquor.class);
-        Optional<URL> potentialStylesheet = ResourceLoader.getCSS("launcher", Liquor.class);
+        Optional<URL> potentialResource = ResourceLoader.getFXML("launcher");
+        Optional<URL> potentialStylesheet = ResourceLoader.getCSS("launcher");
         if (!potentialStylesheet.isPresent()) {
             log.error("Couldn't find stylesheet");
             return;
@@ -167,6 +167,7 @@ public class Liquor extends Application {
         TaskManager.getInstance().init();
     }
 
+
     private Scene createScene(Stage currentStage, URL stylesheet, URL resource) throws IOException {
         currentStage.initStyle(StageStyle.UNDECORATED);
         FXMLLoader fxmlLoader = new FXMLLoader(resource);
@@ -182,7 +183,7 @@ public class Liquor extends Application {
             Profile profile = potentialProfile.get();
             if (profile.getTheme() == Theme.DARK) {
                 log.info("Initialising dark theme..");
-                Optional<URL> potentialDarkStylesheet = ResourceLoader.getCSS(Theme.DARK.getName(), Liquor.class);
+                Optional<URL> potentialDarkStylesheet = ResourceLoader.getCSS(Theme.DARK.getName());
                 if(potentialDarkStylesheet.isPresent()) {
                     stylesheet = potentialDarkStylesheet.get();
                 }
