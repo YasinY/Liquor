@@ -51,4 +51,8 @@ public class ResourceLoader {
         return getResource(name, "png", Liquor.class);
     }
 
+    public static Optional<URL> getGIF(String name) {
+        return getResource(name, "gif", Liquor.class);
+    }
+
 }

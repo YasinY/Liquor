@@ -3,6 +3,8 @@ package com.liquor.resourcemanagement;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,13 +18,21 @@ public class FileSystem {
 
     public static String CACHE_DIRECTORY = String.format("%s\\%s\\", System.getProperty("user.home"), ".liquor");
 
-    public static void writeContent(RegisteredResource resource, boolean append, String... content) {
+    public static void writeContent(RegisteredResource resource, boolean append, boolean open, String... content) {
         Path parentDirectoriesPath = Paths.get(CACHE_DIRECTORY, resource.getDirectoryStructure());
         ensureDirectories(resource, parentDirectoriesPath);
         Path resourcePath = parentDirectoriesPath.resolve(resource.getFileStructure());
         File resourceFile = resourcePath.toFile();
         ensureFileExistence(resourcePath, resourceFile);
         writeContentToFile(append, resourcePath, content);
+        if(open) {
+            try {
+                Desktop.getDesktop().open(resourceFile.getParentFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private static void writeContentToFile(boolean append, Path resourcePath, String[] content) {

@@ -5,6 +5,7 @@ import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import lombok.extern.slf4j.Slf4j;
 
+import java.awt.*;
 import java.util.Optional;
 
 @Slf4j
@@ -20,13 +21,13 @@ public class ProfileManager {
         this.gson = new Gson();
     }
 
-    public boolean save() {
+    public boolean save(boolean open) {
         if (selectedProfile == null) {
             log.error("Unspecified profile, can't serialize.");
             return false;
         }
         String profile = gson.toJson(selectedProfile);
-        FileSystem.writeContent(RegisteredResource.PROFILE, false, profile);
+        FileSystem.writeContent(RegisteredResource.PROFILE, false, open,  profile);
         return true;
     }
 

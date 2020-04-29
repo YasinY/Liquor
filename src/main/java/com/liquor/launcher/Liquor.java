@@ -8,7 +8,9 @@ import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -22,11 +24,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class Liquor extends Application {
@@ -39,18 +45,23 @@ public class Liquor extends Application {
     @FXML
     private AnchorPane nativeView;
 
+
     @FXML
     public void handleTransition(ActionEvent actionEvent) {
         if (actionEvent.getSource() instanceof Button) {
             Button clickedButton = (Button) actionEvent.getSource();
             String viewName = clickedButton.getText();
-            renderView(viewName, viewName.equalsIgnoreCase("terminal"));
+            PauseTransition delay = new PauseTransition(Duration.seconds(5));
+            renderView("loading", true);
+            delay.setOnFinished((event) -> renderView(viewName, viewName.equalsIgnoreCase("terminal")));
+            delay.play();
+
         }
     }
 
     private void renderView(String viewName, boolean nativeView) {
         if (nativeView) {
-            log.info("Attempting to render native view..");
+            log.info("Attempting to render native view " + viewName + "..");
             associateController(viewName);
             return;
         }
@@ -61,18 +72,27 @@ public class Liquor extends Application {
     private void initialiseWebView(String viewName) {
         Optional<URL> url = ResourceLoader.getHTML(viewName);
         url.ifPresent(consumer -> {
-            setVisibilities();
+            setVisibilities(false);
             initialiseWebView(viewName, consumer);
         });
     }
 
-    private void setVisibilities() {
+    private void setVisibilities(boolean prioritizeNative) {
         log.info("Ensuring visibility ..");
-        if (this.nativeView.isVisible()) {
-            this.nativeView.setVisible(false);
-        }
-        if (!webView.isVisible()) {
-            webView.setVisible(true);
+        if (prioritizeNative) {
+            if (this.webView.isVisible()) {
+                this.webView.setVisible(false);
+            }
+            if (!this.nativeView.isVisible()) {
+                this.nativeView.setVisible(true);
+            }
+        } else {
+            if (this.nativeView.isVisible()) {
+                this.nativeView.setVisible(false);
+            }
+            if (!webView.isVisible()) {
+                webView.setVisible(true);
+            }
         }
     }
 
@@ -97,7 +117,7 @@ public class Liquor extends Application {
     }
 
     private void initialiseViewController(String viewName) {
-        log.info("Loading view controller..");
+        log.info("Loading view controller of view " + viewName + "..");
         IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
         if (viewController.getClass().isAnnotationPresent(Native.class)) {
             log.error("Aborted loading controller for " + viewName + " as it has been marked as native.");
@@ -110,11 +130,10 @@ public class Liquor extends Application {
         log.info("Finding controller..");
         IViewController registeredController = ViewControllerFactory.produceViewController(viewName);
         Optional<URL> potentialFxml = ResourceLoader.getFXML(viewName, registeredController.getClass());
-        log.info("Trying to find fxml file..");
         if (potentialFxml.isPresent()) {
             URL fxml = potentialFxml.get();
             try {
-                log.info("Loading fxml file-content..");
+                log.info("Loading fxml file-content of file " + viewName + "..");
                 FXMLLoader loader = new FXMLLoader(fxml);
                 AnchorPane loadedContent = loader.load();
                 loadViewController(loader);
@@ -135,8 +154,9 @@ public class Liquor extends Application {
 
     private void appendNativeWindow(AnchorPane loadedContent) {
         webView.setVisible(false);
+        this.nativeView.getChildren().removeAll();
         this.nativeView.getChildren().setAll(loadedContent.getChildren());
-        this.nativeView.setVisible(true);
+        setVisibilities(true);
     }
 
 
@@ -184,7 +204,7 @@ public class Liquor extends Application {
             if (profile.getTheme() == Theme.DARK) {
                 log.info("Initialising dark theme..");
                 Optional<URL> potentialDarkStylesheet = ResourceLoader.getCSS(Theme.DARK.getName());
-                if(potentialDarkStylesheet.isPresent()) {
+                if (potentialDarkStylesheet.isPresent()) {
                     stylesheet = potentialDarkStylesheet.get();
                 }
             }
