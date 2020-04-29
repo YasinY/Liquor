@@ -10,7 +10,6 @@ import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -30,9 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class Liquor extends Application {
@@ -51,11 +47,13 @@ public class Liquor extends Application {
         if (actionEvent.getSource() instanceof Button) {
             Button clickedButton = (Button) actionEvent.getSource();
             String viewName = clickedButton.getText();
-            PauseTransition delay = new PauseTransition(Duration.seconds(5));
+            if(nativeView.getId().equalsIgnoreCase("loadingView")) {
+                return;
+            }
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
             renderView("loading", true);
             delay.setOnFinished((event) -> renderView(viewName, viewName.equalsIgnoreCase("terminal")));
             delay.play();
-
         }
     }
 
@@ -154,7 +152,7 @@ public class Liquor extends Application {
 
     private void appendNativeWindow(AnchorPane loadedContent) {
         webView.setVisible(false);
-        this.nativeView.getChildren().removeAll();
+        this.nativeView.setId(loadedContent.getId());
         this.nativeView.getChildren().setAll(loadedContent.getChildren());
         setVisibilities(true);
     }

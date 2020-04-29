@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="loadingView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.liquor.launcher.viewcontroller.impl.Loading">
+   <children>
+      <ImageView fx:id="loadingImage" fitHeight="500.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
+      <ProgressBar fx:id="progressBar" layoutX="93.0" layoutY="451.0" prefHeight="18.0" prefWidth="330.0" progress="0.0" />
+      <ProgressIndicator fx:id="progressIndicator" layoutX="194.0" layoutY="433.0" prefHeight="36.0" prefWidth="128.0" progress="0.0" />
+   </children>
+</AnchorPane>
