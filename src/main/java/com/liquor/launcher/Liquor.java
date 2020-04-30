@@ -8,6 +8,7 @@ import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
+import com.sun.security.auth.module.NTSystem;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -28,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Slf4j
@@ -45,16 +47,20 @@ public class Liquor extends Application {
     @FXML
     public void handleTransition(ActionEvent actionEvent) {
         if (actionEvent.getSource() instanceof Button) {
-            Button clickedButton = (Button) actionEvent.getSource();
-            String viewName = clickedButton.getText();
-            if(nativeView.getId().equalsIgnoreCase("loadingView")) {
+            if(nativeView.getId().equalsIgnoreCase("loadingView") && !webView.isVisible()) {
                 return;
             }
-            PauseTransition delay = new PauseTransition(Duration.seconds(3));
-            renderView("loading", true);
-            delay.setOnFinished((event) -> renderView(viewName, viewName.equalsIgnoreCase("terminal")));
-            delay.play();
+            Button clickedButton = (Button) actionEvent.getSource();
+            String viewName = clickedButton.getText();
+            loadView(viewName);
         }
+    }
+
+    private void loadView(String viewName) {
+        PauseTransition delay = new PauseTransition(Duration.seconds(3));
+        renderView("loading", true);
+        delay.setOnFinished((event) -> renderView(viewName, viewName.equalsIgnoreCase("terminal")));
+        delay.play();
     }
 
     private void renderView(String viewName, boolean nativeView) {
@@ -161,6 +167,7 @@ public class Liquor extends Application {
     @Override
     public void start(Stage currentStage) throws IOException {
         log.info("Starting application.. ");
+        System.out.println(System.getenv("ProgramFiles"));
         startup(currentStage);
     }
 
@@ -224,7 +231,7 @@ public class Liquor extends Application {
     }
 
     public static void main(String[] args) {
-        //System.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
+        //Privileges.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
         launch(args);
     }
 

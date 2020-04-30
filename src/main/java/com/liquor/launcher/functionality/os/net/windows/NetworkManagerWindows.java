@@ -1,13 +1,9 @@
-package com.liquor.launcher.functionality.net.windows;
+package com.liquor.launcher.functionality.os.net.windows;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class NetworkManagerWindows {
 
@@ -27,7 +23,7 @@ public class NetworkManagerWindows {
                 //line = r.readLine();
                 if (line.contains("Administrative state")) {
                     state = line.split("\\s+")[3];
-                    //System.out.println(state);
+                    //Privileges.out.println(state);
                     state = state.toLowerCase();
                     if (state.equals("enabled")) {
                         return true;
@@ -58,7 +54,7 @@ public class NetworkManagerWindows {
                 //line = r.readLine();
                 if (line.contains("Connect state")) {
                     state = line.split("\\s+")[3];
-//                    System.out.println(state);
+//                    Privileges.out.println(state);
                     state = state.toLowerCase();
                     if (state.equals("connected")) {
                         return true;
@@ -86,7 +82,7 @@ public class NetworkManagerWindows {
                 //line = r.readLine();
                 if (line.contains("SSID")) {
                     ssid = line.split("\\s+")[3];
-//                    System.out.println(ssid);
+//                    Privileges.out.println(ssid);
                     return ssid;
                 }
             }
@@ -110,7 +106,7 @@ public class NetworkManagerWindows {
 
                 if (line.contains("IP-Ad")) {
                     ip = line.split("\\s+")[2];
-                    //System.out.println(ip);
+                    //Privileges.out.println(ip);
                     return ip;
                 }
             }
@@ -153,7 +149,7 @@ public class NetworkManagerWindows {
                 if (line.contains("Subnet Prefix")) {
                     sb = line.split("\\s+")[5];
                     sb = sb.substring(0, sb.length() - 1);
-                    //System.out.println(sb);
+                    //Privileges.out.println(sb);
                     return sb;
                 }
             }

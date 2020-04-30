@@ -1,4 +1,4 @@
-package com.liquor.launcher.functionality.net.unix;
+package com.liquor.launcher.functionality.os.net.unix;
 
 public class NetworkManagerUnix {
 
