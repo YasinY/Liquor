@@ -167,7 +167,7 @@ public class Liquor extends Application {
     @Override
     public void start(Stage currentStage) throws IOException {
         log.info("Starting application.. ");
-        System.out.println(System.getenv("ProgramFiles"));
+        ResourceLoader.extractOpenVPN();
         startup(currentStage);
     }
 

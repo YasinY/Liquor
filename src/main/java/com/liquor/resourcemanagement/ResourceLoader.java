@@ -3,6 +3,9 @@ package com.liquor.resourcemanagement;
 import com.liquor.launcher.Liquor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Optional;
 
@@ -53,6 +56,28 @@ public class ResourceLoader {
 
     public static Optional<URL> getGIF(String name) {
         return getResource(name, "gif", Liquor.class);
+    }
+
+    public static void extractOpenVPN() {
+        String os = System.getProperty("os.name");
+        String version = System.getProperty("os.version");
+        if (os.contains("Windows")) {
+            String path = String.format("windows%s", version.contains("10") ? "10" : version.contains("8") ? "8" : "7");
+            Optional<URL> potentialExe = getResource(path + "openvpn", "exe", Liquor.class);
+            if (potentialExe.isPresent()) {
+                try (InputStream exeFile = potentialExe.get().openStream()) {
+                    OutputStream exeOutputStream = new FileOutputStream("openvpn.exe");
+                    byte[] bytesPerIteration = new byte[2048];
+                    int length;
+                    while ((length = exeFile.read(bytesPerIteration)) != -1) {
+                        exeOutputStream.write(bytesPerIteration, 0, length);
+                    }
+                    exeOutputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

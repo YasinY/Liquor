@@ -3,7 +3,6 @@ package com.liquor.resourcemanagement;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
@@ -25,7 +24,7 @@ public class FileSystem {
         File resourceFile = resourcePath.toFile();
         ensureFileExistence(resourcePath, resourceFile);
         writeContentToFile(append, resourcePath, content);
-        if(open) {
+        if (open) {
             try {
                 Desktop.getDesktop().open(resourceFile.getParentFile());
             } catch (IOException e) {
