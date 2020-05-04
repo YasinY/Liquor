@@ -58,7 +58,7 @@ public class Liquor extends Application {
 
     private void loadView(String viewName) {
         PauseTransition delay = new PauseTransition(Duration.seconds(3));
-        renderView("loading", true);
+        renderView("Loading", true);
         delay.setOnFinished((event) -> renderView(viewName, viewName.equalsIgnoreCase("terminal")));
         delay.play();
     }

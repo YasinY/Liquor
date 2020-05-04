@@ -9,6 +9,6 @@
    <children>
       <ImageView fx:id="loadingImage" fitHeight="500.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
       <ProgressBar fx:id="progressBar" layoutX="93.0" layoutY="451.0" prefHeight="18.0" prefWidth="330.0" progress="0.0" />
-      <ProgressIndicator fx:id="progressIndicator" layoutX="194.0" layoutY="433.0" prefHeight="36.0" prefWidth="128.0" progress="0.0" />
+      <ProgressIndicator fx:id="progressIndicator" layoutX="244.0" layoutY="433.0" prefHeight="36.0" prefWidth="128.0" progress="0.0" />
    </children>
 </AnchorPane>

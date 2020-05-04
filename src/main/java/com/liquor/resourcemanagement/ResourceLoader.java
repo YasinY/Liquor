@@ -21,6 +21,16 @@ public class ResourceLoader {
         return Optional.ofNullable(context.getResource(completeName));
     }
 
+    private static Optional<InputStream> getResourceStream(String name, String extension, Class context) {
+        String completeName = name + "." + extension;
+        return Optional.ofNullable(context.getResourceAsStream(completeName));
+    }
+
+    private static Optional<InputStream> getRelativeResourceAsStream(String name, String extension, Class context) {
+        String completeName = name + "." + extension;
+        return Optional.ofNullable(context.getClassLoader().getResourceAsStream(completeName));
+    }
+
 
     public static Optional<URL> getFXML(String name, Class context) {
         return getResource(name, "fxml", context);
@@ -59,13 +69,16 @@ public class ResourceLoader {
     }
 
     public static void extractOpenVPN() {
+        log.info("Extracting openvpn...");
         String os = System.getProperty("os.name");
         String version = System.getProperty("os.version");
         if (os.contains("Windows")) {
-            String path = String.format("windows%s", version.contains("10") ? "10" : version.contains("8") ? "8" : "7");
-            Optional<URL> potentialExe = getResource(path + "openvpn", "exe", Liquor.class);
+            String path = String.format("openvpn/windows%s/", version.contains("10") ? "10" : version.contains("8") ? "8" : "7");
+            Optional<InputStream> potentialExe = getResourceStream(path + "openvpn", "exe", Liquor.class);
+            log.info("OS is windows, exe is present? " + potentialExe.isPresent());
+            log.info("Path: " + path + "openvpn.exe");
             if (potentialExe.isPresent()) {
-                try (InputStream exeFile = potentialExe.get().openStream()) {
+                try (InputStream exeFile = potentialExe.get()) {
                     OutputStream exeOutputStream = new FileOutputStream("openvpn.exe");
                     byte[] bytesPerIteration = new byte[2048];
                     int length;
