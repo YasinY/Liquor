@@ -1,4 +1,4 @@
-package com.liquor.resourcemanagement.openvpn;
+package com.liquor.prerequisites.openvpn;
 
 import com.liquor.launcher.Liquor;
 import com.liquor.resourcemanagement.ResourceLoader;
@@ -14,6 +14,15 @@ import java.util.Optional;
 @Slf4j
 public class OpenVPNResource {
 
+    String os = System.getProperty("os.name");
+    String version = System.getProperty("os.version");
+
+
+
+    public static void checkOpenVPN() {
+
+    }
+
     public static void extractOpenVPN() {
         log.info("Extracting openvpn...");
         String os = System.getProperty("os.name");
@@ -28,6 +37,7 @@ public class OpenVPNResource {
             }
         }
     }
+
 
     private static void displayAlert(InputStream exeFile) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

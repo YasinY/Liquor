@@ -145,11 +145,9 @@ public class NetworkManagerWindows {
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             while ((line = r.readLine()) != null) {
-                //line = r.readLine();
                 if (line.contains("Subnet Prefix")) {
                     sb = line.split("\\s+")[5];
                     sb = sb.substring(0, sb.length() - 1);
-                    //Privileges.out.println(sb);
                     return sb;
                 }
             }

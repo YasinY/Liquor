@@ -8,7 +8,7 @@ import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
-import com.liquor.resourcemanagement.openvpn.OpenVPNResource;
+import com.liquor.prerequisites.openvpn.OpenVPNResource;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -223,8 +223,9 @@ public class Liquor extends Application {
         currentStage.setTitle("Liquor - the professional all in one networking tool");
         currentStage.show();
         currentStage.centerOnScreen();
-
     }
+
+
 
     public void init() {
     }
