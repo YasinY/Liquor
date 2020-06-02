@@ -7,6 +7,7 @@ import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
+import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.ResourceLoader;
 import com.liquor.prerequisites.openvpn.OpenVPNResource;
 import javafx.animation.PauseTransition;
@@ -183,7 +184,6 @@ public class Liquor extends Application {
             return;
         }
         URL resource = potentialResource.get();
-
         stylesheet = assignDarkThemeIfPossible(stylesheet); //this is bad tbh, whatever
         Scene scene = createScene(currentStage, stylesheet, resource);
         initScene(currentStage, scene);

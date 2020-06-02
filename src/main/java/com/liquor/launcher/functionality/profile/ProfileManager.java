@@ -32,7 +32,8 @@ public class ProfileManager {
     }
 
     public boolean load() {
-        this.selectedProfile = gson.fromJson(FileSystem.readFirstLine(RegisteredResource.PROFILE), Profile.class);
+        String line = FileSystem.readFirstLine(RegisteredResource.PROFILE);
+        this.selectedProfile = gson.fromJson(line, Profile.class);
         return true;
     }
 

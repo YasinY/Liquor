@@ -53,7 +53,7 @@ public class FileSystem {
         }
     }
 
-    private static void ensureDirectories(RegisteredResource resource, Path parentDirectoriesPath) {
+    public static void ensureDirectories(RegisteredResource resource, Path parentDirectoriesPath) {
         if (!Files.exists(parentDirectoriesPath)) {
             boolean creationSuccessful = parentDirectoriesPath.toFile().mkdirs();
             log.info("Successful creation of directories " + resource.getName() + ": " + creationSuccessful);
@@ -62,6 +62,8 @@ public class FileSystem {
 
     public static List<String> readContent(RegisteredResource resource) {
         Path resourcePath = Paths.get(CACHE_DIRECTORY, resource.getFullStructure());
+        Path parentDirectoriesPath = Paths.get(CACHE_DIRECTORY, resource.getDirectoryStructure());
+        ensureDirectories(resource, parentDirectoriesPath);
         if (Files.exists(resourcePath)) {
             try {
                 return Files.lines(resourcePath).collect(Collectors.toList());
@@ -73,6 +75,7 @@ public class FileSystem {
     }
 
     public static String readFirstLine(RegisteredResource resource) {
-        return readContent(resource).get(0);
+        List<String> content = readContent(resource);
+        return content.size() > 0 ? content.get(0) : null;
     }
 }
