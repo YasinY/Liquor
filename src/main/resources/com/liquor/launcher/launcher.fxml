@@ -41,7 +41,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                  <Button mnemonicParsing="false" onAction="#handleTransition" prefHeight="40.0" prefWidth="170.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                  <Button id="Cisco" mnemonicParsing="false" onAction="#handleTransition" prefHeight="40.0" prefWidth="170.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                      <graphic>
                         <ImageView id="Cisco" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                            <image>
