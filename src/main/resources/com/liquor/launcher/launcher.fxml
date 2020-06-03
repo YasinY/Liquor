@@ -20,7 +20,7 @@
             <RowConstraints minHeight="500.0" prefHeight="30.0" />
          </rowConstraints>
          <children>
-            <GridPane>
+            <GridPane fx:id="buttonGrid">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>

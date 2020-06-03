@@ -21,6 +21,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -42,6 +43,9 @@ public class Liquor extends Application {
     @FXML
     private AnchorPane nativeView;
 
+    @FXML
+    private GridPane buttonGrid;
+
 
     @FXML
     public void handleTransition(ActionEvent actionEvent) {
@@ -56,10 +60,26 @@ public class Liquor extends Application {
     }
 
     private void loadView(String viewName) {
+        disableButtons();
         PauseTransition delay = new PauseTransition(Duration.seconds(3));
         renderView("Loading", true);
-        delay.setOnFinished((event) -> renderView(viewName, viewName.equalsIgnoreCase("terminal")));
+        delay.setOnFinished((event) -> {
+            renderView(viewName, viewName.equalsIgnoreCase("terminal"));
+            enableButtons();
+        });
         delay.play();
+    }
+
+    private void disableButtons() {
+        buttonGrid.getChildren().filtered(node -> node instanceof Button).forEach(button -> {
+            button.setDisable(true);
+        });
+    }
+
+    private void enableButtons() {
+        buttonGrid.getChildren().filtered(node -> node instanceof Button).forEach(button -> {
+            button.setDisable(false);
+        });
     }
 
     private void renderView(String viewName, boolean nativeView) {
