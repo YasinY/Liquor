@@ -7,9 +7,8 @@ import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
-import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.ResourceLoader;
-import com.liquor.prerequisites.openvpn.OpenVPNResource;
+import com.liquor.resourcemanagement.registered.RegisteredResource;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -167,7 +166,7 @@ public class Liquor extends Application {
     @Override
     public void start(Stage currentStage) throws IOException {
         log.info("Starting application.. ");
-       // OpenVPNResource.extractOpenVPN();
+        // OpenVPNResource.extractOpenVPN();
         startup(currentStage);
     }
 
@@ -182,6 +181,9 @@ public class Liquor extends Application {
         if (!potentialResource.isPresent()) {
             log.error("Couldn't find resource");
             return;
+        }
+        if (!RegisteredResource.PROFILE.exists()) {
+            ProfileManager.getInstance().init();
         }
         URL resource = potentialResource.get();
         stylesheet = assignDarkThemeIfPossible(stylesheet); //this is bad tbh, whatever
@@ -224,7 +226,6 @@ public class Liquor extends Application {
         currentStage.show();
         currentStage.centerOnScreen();
     }
-
 
 
     public void init() {

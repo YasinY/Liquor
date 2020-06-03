@@ -15,5 +15,6 @@ public class Dashboard extends ViewController {
     @Override
     public void load() {
       log.info("Dashboard action taken");
+
     }
 }

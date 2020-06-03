@@ -1,5 +1,7 @@
 package com.liquor.resourcemanagement.registered;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 public enum RegisteredResource {
@@ -39,5 +41,13 @@ public enum RegisteredResource {
 
     public String getFullStructure() {
         return String.format("%s%s", getDirectoryStructure(), getFileStructure());
+    }
+
+    public String getFullPath() {
+        return String.format("%s\\%s\\%s", System.getProperty("user.home"), ".liquor", getFullStructure());
+    }
+
+    public boolean exists() {
+        return Files.exists(Paths.get(getFullPath()));
     }
 }
