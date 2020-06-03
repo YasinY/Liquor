@@ -54,7 +54,7 @@ public class Liquor extends Application {
                 return;
             }
             Button clickedButton = (Button) actionEvent.getSource();
-            String viewName = clickedButton.getText();
+            String viewName = clickedButton.getId();
             loadView(viewName);
         }
     }
