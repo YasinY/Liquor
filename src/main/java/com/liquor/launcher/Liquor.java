@@ -60,14 +60,7 @@ public class Liquor extends Application {
     }
 
     private void loadView(String viewName) {
-        disableButtons();
-        PauseTransition delay = new PauseTransition(Duration.seconds(3));
-        renderView("Loading", true);
-        delay.setOnFinished((event) -> {
             renderView(viewName, viewName.equalsIgnoreCase("terminal"));
-            enableButtons();
-        });
-        delay.play();
     }
 
     private void disableButtons() {
@@ -83,6 +76,7 @@ public class Liquor extends Application {
     }
 
     private void renderView(String viewName, boolean nativeView) {
+        disableButtons();
         if (nativeView) {
             log.info("Attempting to render native view " + viewName + "..");
             associateController(viewName);
@@ -134,6 +128,7 @@ public class Liquor extends Application {
                     log.info("Initialising controller..");
                     initialiseViewController(viewName);
                     webView.getEngine().getLoadWorker().stateProperty().removeListener(this);
+                    enableButtons();
                 }
             }
         };
@@ -176,10 +171,10 @@ public class Liquor extends Application {
     }
 
     private void appendNativeWindow(AnchorPane loadedContent) {
-        webView.setVisible(false);
         this.nativeView.setId(loadedContent.getId());
         this.nativeView.getChildren().setAll(loadedContent.getChildren());
         setVisibilities(true);
+        enableButtons();
     }
 
 
