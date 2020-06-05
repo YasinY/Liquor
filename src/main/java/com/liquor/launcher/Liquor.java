@@ -12,6 +12,8 @@ import com.liquor.resourcemanagement.ResourceLoader;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -23,6 +25,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -240,7 +246,7 @@ public class Liquor extends Application {
         currentStage.setTitle("Liquor - the professional all in one networking tool");
         currentStage.show();
         currentStage.centerOnScreen();
-        SplashScreen.CURRENT_SPLASHSCREEN.hide();
+        //TODO hide splash
         log.info("Initiaited scene..");
     }
 
@@ -252,6 +258,7 @@ public class Liquor extends Application {
         //Privileges.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
         launch(args);
     }
+
 
 
 }

@@ -31,6 +31,10 @@ public class ResourceLoader {
         return getResource(name, "fxml", context);
     }
 
+    public static Optional<URL> getMP4(String name, Class context) {
+        return getResource(name, "mp4", context);
+    }
+
     public static Optional<URL> getFXML(String name) {
         return getResource(name, "fxml", Liquor.class);
     }
