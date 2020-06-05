@@ -246,7 +246,7 @@ public class Liquor extends Application {
         currentStage.setTitle("Liquor - the professional all in one networking tool");
         currentStage.show();
         currentStage.centerOnScreen();
-        //TODO hide splash
+        SplashScreen.FRAME.setVisible(false);
         log.info("Initiaited scene..");
     }
 
