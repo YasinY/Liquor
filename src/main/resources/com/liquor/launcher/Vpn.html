@@ -9,14 +9,19 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="./style-dark.css">
+
+    <style>
+    </style>
+
 </head>
 
 <body>
+<div class="containerCenter">
     <div class="row">
         <div class="col">
             <div class="d-flex justify-content-center p-2">
-                <h6>Current IP: <span class="badge badge-info">88.8.888.888</span></h6>
+                <h6 class="OwnTXT">Current IP: <span class="badge badge-info">88.8.888.888</span></h6>
             </div>
         </div>
         <div class="col">
@@ -28,43 +33,44 @@
         <div class="w-100"></div>
         <div class="col">
             <div class="d-flex justify-content-center p-2">
-                <button type="button" class="btn btn-dark">VPN Quick Connect</button>
+                <button type="button" class="btn btn-secondary">VPN Quick Connect</button>
             </div>
         </div>
         <div class="w-100"></div>
         <div class="col">
-            <div class="d-flex justify-content-center">
-                <div class="card" style="width: 18rem;">
+            <div class="d-flex justify-content-center OwnBG">
+                <div class="card OwnBG border-0" style="width: 18rem;">
                     <div class="input-group mb-3 p-2">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Username</span>
+                            <span class="input-group-text OwnBG OwnTXT" id="inputGroup-sizing-default">Username</span>
                         </div>
-                        <input type="text" class="form-control" aria-label="Sizing example input"
+                        <input type="text" class="form-control OwnBG" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-default">
                     </div>
                     <div class="input-group mb-3 p-2">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Password</span>
+                            <span class="input-group-text OwnBG OwnTXT" id="inputGroup-sizing-default">Password</span>
                         </div>
-                        <input type="text" class="form-control" aria-label="Sizing example input"
+                        <input type="password" class="form-control" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-default">
                     </div>
-                    <button type="button" class="btn btn-danger p-2">Logout</button>
+                    <button type="button" class="btn btn-danger p-2 m-2">Logout</button>
                 </div>
             </div>
         </div>
         <div class="col">
             <div class="d-flex justify-content-center">
-                <div class="card" style="width: 18rem;">
+                <div class="card OwnBorder" style="width: 18rem;">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Session Time :</li>
-                        <li class="list-group-item">Download Speed :</li>
-                        <li class="list-group-item">Upload Speed :</li>
+                        <li class="list-group-item OwnBorder OwnBG OwnTXT">Session Time :</li>
+                        <li class="list-group-item OwnBorder OwnBG OwnTXT">Download Speed :</li>
+                        <li class="list-group-item OwnBorder OwnBG OwnTXT">Upload Speed :</li>
                       </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 
 </html>
