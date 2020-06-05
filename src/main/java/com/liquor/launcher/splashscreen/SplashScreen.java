@@ -21,7 +21,7 @@ public class SplashScreen {
     /**
      * The frame the jlabel will be located at
      */
-    private JFrame frame = new JFrame();
+    public static JFrame FRAME = new JFrame();
     /**
      * The image being displayed
      */
@@ -41,7 +41,7 @@ public class SplashScreen {
      * the frame is gonna dissappear and the object is able to get collected
      * by the gc}
      */
-    public void showSplash(final int seconds) {
+    public void showSplash() {
         Optional<URL> projectGif = ResourceLoader.getGIF("project");
         if (projectGif.isPresent()) {
             try {
@@ -49,24 +49,13 @@ public class SplashScreen {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            frame.setUndecorated(true);
+            FRAME.setUndecorated(true);
             label.setIcon(image);
-            frame.setSize(image.getIconWidth(), image.getIconHeight());
-            frame.setLocationRelativeTo(null); //Thanks to king fox!
-            frame.add(label);
-            frame.setVisible(true);
-            try {
-                Thread.sleep(seconds * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            frame.setVisible(false);
-            try {
-                this.finalize();
-                Liquor.main(null);
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
+            FRAME.setSize(image.getIconWidth(), image.getIconHeight());
+            FRAME.setLocationRelativeTo(null); //Thanks to king fox!
+            FRAME.add(label);
+            FRAME.setVisible(true);
+            Liquor.main(null);
         }
     }
 
