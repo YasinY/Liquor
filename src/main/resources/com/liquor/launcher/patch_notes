@@ -1,0 +1,15 @@
+- Design aller HTMLs fertigstellen
+- Das LIGHT theme als standard für jede HTML setzen
+- Dark theme für jede HTML fertigstellen
+
+-- VPN --
+- VPN quick connect weg (in VPN tab)
+- Current IP & Connect status vielleicht untereinander
+- Username & Password fields icons geben (https://stackoverflow.com/questions/22217992/bootstrap-icon-for-username-and-password)
+- Session time, Download/Upload ins dashboard statt VPN
+- "Unterstützte Provider" Listenbox (auswählbar)
+- "Unterstützte Städte" Listenbox (auswählbar)
+- Login/Logout d-none
+
+-- Settings --
+Toggle buttons

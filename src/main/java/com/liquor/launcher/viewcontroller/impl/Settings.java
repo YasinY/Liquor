@@ -17,7 +17,8 @@ public class Settings extends ViewController {
     public void load() {
         EventTarget saveButton = (EventTarget) document.getElementById("saveProfileButton");
         saveButton.addEventListener("click", (event) -> {
-            ProfileManager.getInstance().save(true);
+            ProfileManager.getInstance().getSelectedProfile().get().switchTheme();
+           /// ProfileManager.getInstance().save(true);
         }, false);
     }
 }

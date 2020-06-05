@@ -8,6 +8,7 @@ import com.liquor.resourcemanagement.ResourceLoader;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Builder
 @Getter
 @Setter
+@Slf4j
 public class Profile {
 
     @Builder.Default
@@ -36,10 +38,14 @@ public class Profile {
     }
 
     public Theme switchTheme() {
-        Liquor.scene.getStylesheets().removeAll();
+        Liquor.scene.getStylesheets();
         this.theme = this.theme == Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
         Optional<URL> potentialSheet = ResourceLoader.getCSS(theme.getName());
-        potentialSheet.ifPresent(stylesheet -> Liquor.scene.getStylesheets().add(stylesheet.toExternalForm()));
+        potentialSheet.ifPresent(stylesheet -> {
+            Liquor.scene.getStylesheets().clear();
+            Liquor.scene.getStylesheets().add(stylesheet.toExternalForm());
+        });
+        Liquor.scene.getStylesheets();
         return this.theme;
     }
 

@@ -240,14 +240,13 @@ public class Liquor extends Application {
     }
 
     private void initScene(Stage currentStage, Scene scene) {
-        Liquor.scene = scene;
         currentStage.setScene(scene);
-        currentStage.setResizable(false);
+        currentStage.setResizable(true);
         currentStage.setTitle("Liquor - the professional all in one networking tool");
         currentStage.show();
         currentStage.centerOnScreen();
+        Liquor.scene = scene;
         SplashScreen.FRAME.setVisible(false);
-        log.info("Initiaited scene..");
     }
 
 
