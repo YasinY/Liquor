@@ -5,6 +5,7 @@ import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.functionality.timer.TaskManager;
+import com.liquor.launcher.splashscreen.SplashScreen;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
@@ -114,7 +115,7 @@ public class Liquor extends Application {
     }
 
     private synchronized void initialiseWebView(String viewName, URL consumer) {
-        log.info("Loading view..");
+        log.info("SplashScreen view..");
         webView.getEngine().load(consumer.toExternalForm());
         log.info("Adding listener..");
         webView.getEngine().getLoadWorker().stateProperty().addListener(getChangedListener(viewName));
@@ -135,7 +136,7 @@ public class Liquor extends Application {
     }
 
     private void initialiseViewController(String viewName) {
-        log.info("Loading view controller of view " + viewName + "..");
+        log.info("SplashScreen view controller of view " + viewName + "..");
         IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
         if (viewController.getClass().isAnnotationPresent(Native.class)) {
             log.error("Aborted loading controller for " + viewName + " as it has been marked as native.");
@@ -151,7 +152,7 @@ public class Liquor extends Application {
         if (potentialFxml.isPresent()) {
             URL fxml = potentialFxml.get();
             try {
-                log.info("Loading fxml file-content of file " + viewName + "..");
+                log.info("SplashScreen fxml file-content of file " + viewName + "..");
                 FXMLLoader loader = new FXMLLoader(fxml);
                 AnchorPane loadedContent = loader.load();
                 loadViewController(loader);
@@ -163,7 +164,7 @@ public class Liquor extends Application {
     }
 
     private void loadViewController(FXMLLoader loader) {
-        log.info("Loading native view controller..");
+        log.info("SplashScreen native view controller..");
         if (loader.getController() != null && loader.getController() instanceof IViewController) {
             IViewController viewController = loader.getController();
             viewController.load();
@@ -181,7 +182,6 @@ public class Liquor extends Application {
     @Override
     public void start(Stage currentStage) throws IOException {
         log.info("Starting application.. ");
-        // OpenVPNResource.extractOpenVPN();
         startup(currentStage);
     }
 
@@ -240,6 +240,8 @@ public class Liquor extends Application {
         currentStage.setTitle("Liquor - the professional all in one networking tool");
         currentStage.show();
         currentStage.centerOnScreen();
+        SplashScreen.CURRENT_SPLASHSCREEN.hide();
+        log.info("Initiaited scene..");
     }
 
 
@@ -250,5 +252,6 @@ public class Liquor extends Application {
         //Privileges.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
         launch(args);
     }
+
 
 }

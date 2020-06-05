@@ -9,7 +9,6 @@ public enum RegisteredController {
     DASHBOARD(Dashboard.class),
     CISCO(Cisco.class),
     VPN(VPN.class),
-    LOADING(Loading.class),
     DEFAULT(Default.class),
     STATISTICS(Statistics.class),
     TERMINAL(Terminal.class),
