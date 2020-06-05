@@ -6,7 +6,7 @@ import com.liquor.launcher.splashscreen.SplashScreen;
 public class LauncherWrapper {
 
     public static void main(String[] args)  {
-        new SplashScreen().showSplash(5);
+        new SplashScreen().showSplash();
     }
 
 }
