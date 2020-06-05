@@ -1,0 +1,41 @@
+                body {
+                  overflow: hidden; /* Hide scrollbars */
+                  }
+
+        html, body {
+            height: 100%;
+            background-color: #111111;
+         }
+
+        .containerCenter {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .OwnBG {
+            background-color : #111111;
+        }
+
+        .OwnTXT {
+            color: white;
+        }
+
+        .OwnBorder {
+            border-color: white;
+        }
+
+        input:focus,
+        input
+        {
+            outline:0px !important;
+            -webkit-appearance:none;
+            box-shadow: none !important;
+            background-color: #111111 !important;
+            color: white !important;
+        }
+
+        .btn-danger, .btn-danger:hover, .btn-danger:active, .btn-danger:visited {
+            background-color: #e70f50 !important;
+        }
