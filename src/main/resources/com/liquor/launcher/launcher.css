@@ -2,7 +2,7 @@
     -fx-font-family: 'Roboto', sans-serif;
 }
 GridPane {
-    -fx-background-color: #383b3e;
+    -fx-background-color: #111111;
     -fx-grid-lines-visible: true;
     -fx-border-color: white;
 }
