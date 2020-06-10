@@ -17,9 +17,10 @@ public class FileSystem {
 
     public static String CACHE_DIRECTORY = String.format("%s\\%s\\", System.getProperty("user.home"), ".liquor");
 
+
     public static void writeContent(RegisteredResource resource, boolean append, boolean open, String... content) {
         Path parentDirectoriesPath = Paths.get(CACHE_DIRECTORY, resource.getDirectoryStructure());
-        ensureDirectories(resource, parentDirectoriesPath);
+        ensureDirectories(resource);
         Path resourcePath = parentDirectoriesPath.resolve(resource.getFileStructure());
         File resourceFile = resourcePath.toFile();
         ensureFileExistence(resourcePath, resourceFile);
@@ -53,7 +54,8 @@ public class FileSystem {
         }
     }
 
-    public static void ensureDirectories(RegisteredResource resource, Path parentDirectoriesPath) {
+    public static void ensureDirectories(RegisteredResource resource) {
+        Path parentDirectoriesPath = Paths.get(CACHE_DIRECTORY, resource.getDirectoryStructure());
         if (!Files.exists(parentDirectoriesPath)) {
             boolean creationSuccessful = parentDirectoriesPath.toFile().mkdirs();
             log.info("Successful creation of directories " + resource.getName() + ": " + creationSuccessful);
@@ -62,8 +64,7 @@ public class FileSystem {
 
     public static List<String> readContent(RegisteredResource resource) {
         Path resourcePath = Paths.get(CACHE_DIRECTORY, resource.getFullStructure());
-        Path parentDirectoriesPath = Paths.get(CACHE_DIRECTORY, resource.getDirectoryStructure());
-        ensureDirectories(resource, parentDirectoriesPath);
+        ensureDirectories(resource);
         if (Files.exists(resourcePath)) {
             try {
                 return Files.lines(resourcePath).collect(Collectors.toList());

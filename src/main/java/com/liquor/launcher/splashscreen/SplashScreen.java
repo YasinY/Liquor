@@ -2,7 +2,10 @@ package com.liquor.launcher.splashscreen;
 
 import com.liquor.launcher.Liquor;
 import com.liquor.launcher.annotations.Native;
+import com.liquor.prerequisites.openvpn.OpenVPNResource;
+import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.ResourceLoader;
+import com.liquor.resourcemanagement.registered.RegisteredResource;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -42,6 +45,8 @@ public class SplashScreen {
      * by the gc}
      */
     public void showSplash() {
+        FileSystem.ensureDirectories(RegisteredResource.AUTH);
+        OpenVPNResource.exportAuth();
         Optional<URL> projectGif = ResourceLoader.getGIF("project");
         if (projectGif.isPresent()) {
             try {

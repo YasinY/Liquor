@@ -8,6 +8,7 @@ import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.splashscreen.SplashScreen;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
+import com.liquor.prerequisites.openvpn.OpenVPNResource;
 import com.liquor.resourcemanagement.ResourceLoader;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import javafx.application.Application;

@@ -5,8 +5,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 public enum RegisteredResource {
-    PROFILE("currentprofile", "lqp", "profile", "suck", "a", "cock");
-
+    PROFILE("currentprofile", "lqp", "profile", "suck", "a", "cock"),
+    AUTH("auth", "txt", "config");
     private String name;
     private String extension;
     private String[] directory;
@@ -43,11 +43,14 @@ public enum RegisteredResource {
         return String.format("%s%s", getDirectoryStructure(), getFileStructure());
     }
 
-    public String getFullPath() {
+    public String getFullFilePath() {
         return String.format("%s\\%s\\%s", System.getProperty("user.home"), ".liquor", getFullStructure());
+    }
+    public String getFullDirectoryPath() {
+        return String.format("%s\\%s\\%s", System.getProperty("user.home"), ".liquor", getDirectoryStructure());
     }
 
     public boolean exists() {
-        return Files.exists(Paths.get(getFullPath()));
+        return Files.exists(Paths.get(getFullFilePath()));
     }
 }
