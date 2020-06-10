@@ -11,29 +11,19 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <style>
-        html, body {
-            height: 100%;
-            background-color: #343a40;
-        }
 
-        .container {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
+    <link rel="stylesheet" href="./style-light.css">
+
 </head>
 
 <body>
-<div class="container">
+<div class="containerCenter">
     <div class="d-flex flex-column">
         <div class="p-2">
-            <p class="lead text-light">
+            <p class="lead OwnTXT">
                 Current Profile:
             </p>
-            <p class="lead text-light">
+            <p class="lead OwnTXT">
                 Session Time:
             </p>
         </div>
@@ -53,6 +43,14 @@
                 </svg>
                 WIFI
             </button>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="card OwnBorder" style="width: 18rem;">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item OwnBorder OwnBG OwnTXT">Download Speed :</li>
+                    <li class="list-group-item OwnBorder OwnBG OwnTXT">Upload Speed :</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
