@@ -20,52 +20,65 @@
 <div class="containerCenter">
     <div class="row">
         <div class="col">
-            <div class="d-flex justify-content-center p-2">
+            <div class="d-flex justify-content-center">
+                <h5><span class="badge badge-danger">Disconnected</span></h5>
+                <h5><span class="badge badge-success d-none">Connected</span></h5>
+            </div>
+            <div class="d-flex justify-content-center">
                 <h6 class="OwnTXT">Current IP: <span class="badge badge-info">88.8.888.888</span></h6>
             </div>
-        </div>
-        <div class="col">
-            <div class="d-flex justify-content-center p-2">
-                <h5><span class="badge badge-danger d-none">Disconnected</span></h5>
-                <h5><span class="badge badge-success">Connected</span></h5>
-            </div>
-        </div>
-        <div class="w-100"></div>
-        <div class="col">
-            <div class="d-flex justify-content-center p-2">
-                <button type="button" class="btn btn-secondary">VPN Quick Connect</button>
-            </div>
-        </div>
-        <div class="w-100"></div>
-        <div class="col">
             <div class="d-flex justify-content-center OwnBG">
-                <div class="card OwnBG border-0" style="width: 18rem;">
-                    <div class="input-group mb-3 p-2">
+                <div class="card OwnBG border-0 mb-2" style="width: 18rem;">
+                    <div class="input-group mb-1">
                         <div class="input-group-prepend">
-                            <span class="input-group-text OwnBG OwnTXT" id="inputGroup-sizing-default">Username</span>
+                            <span class="input-group-text OwnBG OwnTXT" id="inputGroup-sizing-default">
+                                <svg
+                                        class="bi bi-person-fill" width="1em" height="1em" viewBox="0 0 16 16"
+                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                </svg>
+                            </span>
                         </div>
-                        <input type="text" class="form-control OwnBG" aria-label="Sizing example input"
+                        <input type="text" class="form-control OwnBG" aria-label="Sizing example input" placeholder="Username"
                                aria-describedby="inputGroup-sizing-default">
                     </div>
-                    <div class="input-group mb-3 p-2">
+                    <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text OwnBG OwnTXT" id="inputGroup-sizing-default">Password</span>
+                            <span class="input-group-text OwnBG OwnTXT" id="inputGroup-sizing-default">
+                                <svg class="bi bi-lock-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <rect width="11" height="9" x="2.5" y="7" rx="2"/>
+  <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+</svg>
+                            </span>
                         </div>
-                        <input type="password" class="form-control" aria-label="Sizing example input"
+                        <input type="password" class="form-control" aria-label="Sizing example input" placeholder="Password"
                                aria-describedby="inputGroup-sizing-default">
                     </div>
-                    <button type="button" class="btn btn-danger p-2 m-2">Logout</button>
                 </div>
             </div>
-        </div>
-        <div class="col">
+
             <div class="d-flex justify-content-center">
-                <div class="card OwnBorder" style="width: 18rem;">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item OwnBorder OwnBG OwnTXT">Session Time :</li>
-                        <li class="list-group-item OwnBorder OwnBG OwnTXT">Download Speed :</li>
-                        <li class="list-group-item OwnBorder OwnBG OwnTXT">Upload Speed :</li>
-                    </ul>
+                <button type="button" class="btn btn-danger mb-2 d-none" style="width: 9rem;">Logout</button>
+                <button type="button" class="btn btn-success mb-2" style="width: 9rem;">Login</button>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <div class="row">
+                        <div class="list-group addscrollbar" id="list-tab" role="tablist">
+                            <button type="button" class="btn btn-primary m-1">Primary</button>
+                        </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown button
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
                 </div>
             </div>
         </div>

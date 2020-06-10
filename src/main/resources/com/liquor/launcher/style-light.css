@@ -38,3 +38,8 @@ input {
 .btn-danger, .btn-danger:hover, .btn-danger:active, .btn-danger:visited {
     background-color: #e70f50 !important;
 }
+
+.addscrollbar {
+  height:150px;
+  overflow-y: scroll;
+}
