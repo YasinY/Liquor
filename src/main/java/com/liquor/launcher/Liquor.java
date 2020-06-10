@@ -10,10 +10,7 @@ import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
 import com.liquor.resourcemanagement.ResourceLoader;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
-import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -25,14 +22,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -67,7 +59,7 @@ public class Liquor extends Application {
     }
 
     private void loadView(String viewName) {
-            renderView(viewName, viewName.equalsIgnoreCase("terminal"));
+        renderView(viewName, viewName.equalsIgnoreCase("terminal"));
     }
 
     private void disableButtons() {
@@ -257,7 +249,6 @@ public class Liquor extends Application {
         //Privileges.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
         launch(args);
     }
-
 
 
 }
