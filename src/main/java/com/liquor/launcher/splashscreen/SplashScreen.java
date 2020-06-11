@@ -46,7 +46,7 @@ public class SplashScreen {
      */
     public void showSplash() {
         FileSystem.ensureDirectories(RegisteredResource.AUTH);
-        OpenVPNResource.exportAuth();
+        //OpenVPNResource.exportConfigurations();
         Optional<URL> projectGif = ResourceLoader.getGIF("project");
         if (projectGif.isPresent()) {
             try {

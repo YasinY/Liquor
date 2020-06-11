@@ -1,17 +1,23 @@
 package com.liquor.launcher.security;
 
+import com.liquor.launcher.Liquor;
+import com.liquor.prerequisites.openvpn.OpenVPNResource;
+import lombok.SneakyThrows;
+
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 import java.util.Base64;
+import java.util.stream.Collectors;
 
 public class Decrypter {
 
@@ -23,7 +29,7 @@ public class Decrypter {
 
     private SecretKeySpec secretKeySpec;
 
-    private Decrypter() {
+    public Decrypter() {
         initialize();
     }
 
@@ -40,6 +46,24 @@ public class Decrypter {
         } catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchPaddingException e) {
             e.printStackTrace();
         }
+    }
+
+    @SneakyThrows
+    public void encryptConfigs() {
+        URI configDirectory = Liquor.class.getResource(OpenVPNResource.OPENVPN_CONFIG_PATH).toURI();
+        Files.walkFileTree(Paths.get(configDirectory), new SimpleFileVisitor<Path>() {
+            @SneakyThrows
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                if (file.getFileName().toString().endsWith(".ovpn")) {
+                    String encryptedLines = Files.lines(file).map(line -> encrypt(line)).collect(Collectors.joining());
+                    String encrypted = encrypt(encryptedLines);
+                    System.out.print(file.getFileName() + ": ");
+                    System.out.println(encrypted);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     //initialisation vector

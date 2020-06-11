@@ -37,16 +37,19 @@ public class Profile {
         return -1;
     }
 
+
     public Theme switchTheme() {
-        Liquor.scene.getStylesheets();
-        this.theme = this.theme == Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
+        updateStyle(this.theme == Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
+        return this.theme;
+    }
+
+    public void updateStyle(Theme theme) {
+        this.theme = theme;
         Optional<URL> potentialSheet = ResourceLoader.getCSS(theme.getName());
         potentialSheet.ifPresent(stylesheet -> {
             Liquor.scene.getStylesheets().clear();
             Liquor.scene.getStylesheets().add(stylesheet.toExternalForm());
         });
-        Liquor.scene.getStylesheets();
-        return this.theme;
     }
 
     public int getSeconds() {
