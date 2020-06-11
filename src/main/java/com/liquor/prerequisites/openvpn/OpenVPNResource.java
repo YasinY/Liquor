@@ -72,10 +72,10 @@ public class OpenVPNResource {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                     String fileName = file.toString();
-                    if (fileName.endsWith(".ovpn")) {
+                    if (fileName.endsWith(".ovpn") || fileName.endsWith(".txt")) {
                         final String fullDirectoryPath = RegisteredResource.AUTH.getFullDirectoryPath();
                         Path destination = Paths.get(fullDirectoryPath  + file.getFileName().toString());
-                        Files.copy(file, destination, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+                        Files.copy(file, destination, StandardCopyOption.REPLACE_EXISTING);
                     }
                     return FileVisitResult.CONTINUE;
                 }
