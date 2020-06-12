@@ -43,3 +43,13 @@ input {
   height:150px;
   overflow-y: scroll;
 }
+
+.btn-primary-outline {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.Ownbtn:focus,.Ownbtn:active {
+   outline: none !important;
+   box-shadow: red;
+}
