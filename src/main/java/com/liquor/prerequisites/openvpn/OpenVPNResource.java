@@ -10,11 +10,9 @@ import javafx.scene.control.ButtonType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URI;
+import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
@@ -84,6 +82,7 @@ public class OpenVPNResource {
         }
     }
 
+    //TODO openvpn configs validation
     private static SimpleFileVisitor<Path> validateBehaviour() {
         return new SimpleFileVisitor<Path>() {
             @Override
@@ -110,6 +109,19 @@ public class OpenVPNResource {
         };
     }
 
+    @SneakyThrows
+    public static void updateAuthentication(String username, String password) {
+        Path authFilePath = Paths.get(RegisteredResource.AUTH.getFullFilePath());
+        if (!RegisteredResource.AUTH.exists()) {
+            File file = new File(authFilePath.toString());
+            boolean successful = file.createNewFile();
+            log.info("Success in creating auth file? " + successful);
+        }
+        FileWriter writer = new FileWriter(authFilePath.toFile());
+        writer.write(username + System.lineSeparator());
+        writer.write(password);
+        writer.close();
+    }
 
     private static void exportFile(InputStream inputFile, String outputName) {
         try {
