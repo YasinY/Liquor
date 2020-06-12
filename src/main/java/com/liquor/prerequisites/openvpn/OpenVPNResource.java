@@ -31,11 +31,15 @@ public class OpenVPNResource {
     public static String OPENVPN_CONFIG_PATH = String.format("%s%s%s", OPENVPN_PATH, "config/", "perfectprivacy/");
 
     public static void checkOpenVPN() {
-        boolean existsInPath = Stream.of(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
+        String pathFormatting = System.getenv("Path") == null ? System.getenv("PATH") : System.getenv("Path");
+        boolean existsInPath = Stream.of(pathFormatting.split(Pattern.quote(File.pathSeparator)))
                 .map(Paths::get)
-                .anyMatch(path -> Files.exists(path.resolve("openvpn")));
+                .anyMatch(path -> path.toString().contains("OpenVPN"));
         if (!existsInPath) {
+            log.info("OPENVPN doesnt exist, prompt required");
             extractOpenVPN();
+        } else {
+            log.info("OPENVPN exists, no prompt needed");
         }
 
 

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.Map;
 import java.util.Optional;
 
 @Native
@@ -46,7 +47,7 @@ public class SplashScreen {
      */
     public void showSplash() {
         FileSystem.ensureDirectories(RegisteredResource.AUTH);
-        //OpenVPNResource.exportConfigurations();
+        OpenVPNResource.checkOpenVPN();
         Optional<URL> projectGif = ResourceLoader.getGIF("project");
         if (projectGif.isPresent()) {
             try {
