@@ -42,4 +42,5 @@ input {
 .addscrollbar {
   height:150px;
   overflow-y: scroll;
+  direction:rtl;
 }

@@ -8,25 +8,48 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="./style-dark.css">
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
-    <style>
-    </style>
+    <link rel="stylesheet" href="./style-light.css">
 
 </head>
 
 <body>
-<div class="containerCenter">
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-secondary" id="darkButton">
-            <input type="radio" name="options" autocomplete="off"> Dark
-        </label>
-        <label class="btn btn-secondary" id="lightButton">
-            <input type="radio" name="options" autocomplete="off"> Light
-        </label>
+    <div class="containerCenter">
+        <div class="row">
+            <div class="col">
+                <div class="d-flex justify-content-center mb-2">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary" id="darkButton">
+                            <input type="radio" name="options" autocomplete="off"> Dark
+                        </label>
+                        <label class="btn btn-secondary" id="lightButton">
+                            <input type="radio" name="options" autocomplete="off"> Light
+                        </label>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mb-4">
+                    <button type="button" class="btn btn-info">Export Profile</button>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <h6 class="OwnTXT">Auto connect VPN on startup</h6>
+                </div>
+                <div class="d-flex justify-content-center ">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary" id="darkButton">
+                            <input type="radio" name="options" autocomplete="off"> On
+                        </label>
+                        <label class="btn btn-secondary" id="lightButton">
+                            <input type="radio" name="options" autocomplete="off"> Off
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
 </body>
 
 </html>
