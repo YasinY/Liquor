@@ -26,31 +26,38 @@ public class Settings extends ViewController {
         Optional<Profile> potentialProfile = ProfileManager.getInstance().getSelectedProfile();
         if (potentialProfile.isPresent()) {
             Profile profile = potentialProfile.get();
-            ((EventTarget) darkButton).addEventListener("click", getToggle(profile, Theme.DARK, darkButton, lightButton), false);
-            ((EventTarget) lightButton).addEventListener("click", getToggle(profile, Theme.LIGHT, lightButton, darkButton), false);
+            ((EventTarget) darkButton).addEventListener("click", (event) -> {
+                if(profile.getTheme() == Theme.DARK) {
+                    return;
+                }
+                if (lightButton.getClassName().contains("active")) {
+                    lightButton.setClassName(lightButton.getClassName().replace("active", ""));
+                }
+                updateButton(darkButton, String.format("%s %s", darkButton.getClassName(), "active"));
+                updateTheme(profile, Theme.DARK);
+            }, false);
+            ((EventTarget) lightButton).addEventListener("click", (event) -> {
+                if(profile.getTheme() == Theme.LIGHT) {
+                    return;
+                }
+                if (darkButton.getClassName().contains("active")) {
+                    darkButton.setClassName(darkButton.getClassName().replace("active", ""));
+                }
+                updateButton(lightButton, String.format("%s %s", lightButton.getClassName(), "active"));
+                updateTheme(profile, Theme.LIGHT);
+            }, false);
 
         } else {
             log.error("Profile not present!");
         }
     }
 
-    private EventListener getToggle(Profile profile, Theme theme, HTMLElement button, HTMLElement previousButton) {
-        String className = previousButton.getClassName();
-        if (className.contains("active")) {
-            previousButton.setClassName(className.replace("active", ""));
-        }
-        button.setClassName(button.getClassName() + " active");
-        return getListener(profile, theme);
+    private void updateButton(HTMLElement lightButton, String active) {
+        lightButton.setClassName(active);
     }
 
-    private EventListener getListener(Profile profile, Theme theme) {
-        return (event) -> {
-            if (profile.getTheme() == theme) {
-                return;
-            }
-            log.info("Changed theme to " + theme.getName());
-            profile.updateStyle(theme);
-            ProfileManager.getInstance().save(false);
-        };
+    private void updateTheme(Profile profile, Theme dark) {
+        profile.updateStyle(dark);
+        ProfileManager.getInstance().save(false);
     }
 }
