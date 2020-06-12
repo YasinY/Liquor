@@ -64,15 +64,11 @@ public class Liquor extends Application {
     }
 
     private void disableButtons() {
-        buttonGrid.getChildren().filtered(node -> node instanceof Button).forEach(button -> {
-            button.setDisable(true);
-        });
+        buttonGrid.getChildren().filtered(node -> node instanceof Button).forEach(button -> button.setDisable(true));
     }
 
     private void enableButtons() {
-        buttonGrid.getChildren().filtered(node -> node instanceof Button).forEach(button -> {
-            button.setDisable(false);
-        });
+        buttonGrid.getChildren().filtered(node -> node instanceof Button).forEach(button -> button.setDisable(false));
     }
 
     private void renderView(String viewName, boolean nativeView) {
@@ -135,23 +131,23 @@ public class Liquor extends Application {
     }
 
     private void initialiseViewController(String viewName) {
-        log.info("SplashScreen view controller of view " + viewName + "..");
-        IViewController viewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
-        if (viewController.getClass().isAnnotationPresent(Native.class)) {
+        log.info("Loading view controller of view " + viewName + "..");
+        IViewController webViewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
+        if (webViewController.getClass().isAnnotationPresent(Native.class)) {
             log.error("Aborted loading controller for " + viewName + " as it has been marked as native.");
             return;
         }
-        viewController.load();
+        webViewController.init();
     }
 
     private void associateController(String viewName) {
-        log.info("Finding controller..");
-        IViewController registeredController = ViewControllerFactory.produceViewController(viewName);
-        Optional<URL> potentialFxml = ResourceLoader.getFXML(viewName, registeredController.getClass());
+        log.info("Locating view controller..");
+        IViewController viewController = ViewControllerFactory.produceViewController(viewName);
+        Optional<URL> potentialFxml = ResourceLoader.getFXML(viewName, viewController.getClass());
         if (potentialFxml.isPresent()) {
             URL fxml = potentialFxml.get();
             try {
-                log.info("SplashScreen fxml file-content of file " + viewName + "..");
+                log.info("Loading fxml file-content of file " + viewName + "..");
                 FXMLLoader loader = new FXMLLoader(fxml);
                 AnchorPane loadedContent = loader.load();
                 loadViewController(loader);
@@ -163,10 +159,10 @@ public class Liquor extends Application {
     }
 
     private void loadViewController(FXMLLoader loader) {
-        log.info("SplashScreen native view controller..");
+        log.info("Loading native view controller..");
         if (loader.getController() != null && loader.getController() instanceof IViewController) {
-            IViewController viewController = loader.getController();
-            viewController.load();
+            IViewController nativeViewController = loader.getController();
+            nativeViewController.load();
         }
     }
 

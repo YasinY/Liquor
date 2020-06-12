@@ -6,7 +6,6 @@ import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.viewcontroller.ViewController;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
-import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLElement;
 
@@ -27,9 +26,10 @@ public class Settings extends ViewController {
         if (potentialProfile.isPresent()) {
             Profile profile = potentialProfile.get();
             ((EventTarget) darkButton).addEventListener("click", (event) -> {
-                if(profile.getTheme() == Theme.DARK) {
+                if (profile.getTheme() == Theme.DARK) {
                     return;
                 }
+                log.info("Set theme to dark.");
                 if (lightButton.getClassName().contains("active")) {
                     lightButton.setClassName(lightButton.getClassName().replace("active", ""));
                 }
@@ -37,9 +37,10 @@ public class Settings extends ViewController {
                 updateTheme(profile, Theme.DARK);
             }, false);
             ((EventTarget) lightButton).addEventListener("click", (event) -> {
-                if(profile.getTheme() == Theme.LIGHT) {
+                if (profile.getTheme() == Theme.LIGHT) {
                     return;
                 }
+                log.info("Set theme to light.");
                 if (darkButton.getClassName().contains("active")) {
                     darkButton.setClassName(darkButton.getClassName().replace("active", ""));
                 }
