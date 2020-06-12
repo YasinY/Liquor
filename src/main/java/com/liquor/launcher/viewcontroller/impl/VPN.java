@@ -5,6 +5,7 @@ import com.liquor.launcher.viewcontroller.ViewController;
 import com.liquor.prerequisites.openvpn.OpenVPNResource;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
+import javafx.scene.web.WebEngine;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
@@ -19,8 +20,8 @@ import org.w3c.dom.html.HTMLInputElement;
 public class VPN extends ViewController {
 
 
-    public VPN(Document document) {
-        super(document);
+    public VPN(WebEngine webEngine) {
+        super(webEngine);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class VPN extends ViewController {
 
     private boolean invalidUsername(PauseTransition transition, String username) {
         HTMLElement notification;
-        if (username.length() < 5 || username.matches("^[a-zA-Z0-9]{3,}$")) {
+        if (username.length() < 5 || !username.matches("^[a-zA-Z0-9]{3,}$")) {
             notification = getMissingUsernameNotification();
             playNotification(transition, notification);
             return true;

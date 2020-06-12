@@ -35,7 +35,7 @@ import java.util.Optional;
 @Slf4j
 public class Liquor extends Application {
 
-    public static Scene scene;
+    public static Parent parent;
 
     @FXML
     private WebView webView;
@@ -132,7 +132,8 @@ public class Liquor extends Application {
 
     private void initialiseViewController(String viewName) {
         log.info("Loading view controller of view " + viewName + "..");
-        IViewController webViewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine().getDocument());
+        IViewController webViewController = ViewControllerFactory.produceViewController(viewName, webView.getEngine());
+
         if (webViewController.getClass().isAnnotationPresent(Native.class)) {
             log.error("Aborted loading controller for " + viewName + " as it has been marked as native.");
             return;
@@ -209,6 +210,7 @@ public class Liquor extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(resource);
         fxmlLoader.setController(this);
         Parent root = fxmlLoader.load();
+        parent = root;
         root.getStylesheets().add(stylesheet.toExternalForm());
         return new Scene(root);
     }
@@ -234,7 +236,6 @@ public class Liquor extends Application {
         currentStage.setTitle("Liquor - the professional all in one networking tool");
         currentStage.show();
         currentStage.centerOnScreen();
-        Liquor.scene = scene;
         SplashScreen.FRAME.setVisible(false);
     }
 

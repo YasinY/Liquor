@@ -47,8 +47,9 @@ public class Profile {
         this.theme = theme;
         Optional<URL> potentialSheet = ResourceLoader.getCSS(theme.getName());
         potentialSheet.ifPresent(stylesheet -> {
-            Liquor.scene.getStylesheets().clear();
-            Liquor.scene.getStylesheets().add(stylesheet.toExternalForm());
+            log.info("Updated style to " + theme.getName());
+            Liquor.parent.getStylesheets().clear();
+            Liquor.parent.getStylesheets().add(stylesheet.toExternalForm());
         });
     }
 

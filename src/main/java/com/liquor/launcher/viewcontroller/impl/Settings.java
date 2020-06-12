@@ -4,6 +4,7 @@ import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.viewcontroller.ViewController;
+import javafx.scene.web.WebEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.events.EventTarget;
@@ -14,22 +15,27 @@ import java.util.Optional;
 @Slf4j
 public class Settings extends ViewController {
 
-    public Settings(Document document) {
-        super(document);
+    public Settings(WebEngine webEngine) {
+        super(webEngine);
     }
 
     @Override
     public void load() {
+        log.info("Loading settings...");
         HTMLElement darkButton = (HTMLElement) document.getElementById("darkButton");
         HTMLElement lightButton = (HTMLElement) document.getElementById("lightButton");
         Optional<Profile> potentialProfile = ProfileManager.getInstance().getSelectedProfile();
         if (potentialProfile.isPresent()) {
             Profile profile = potentialProfile.get();
+            if(profile.getTheme() == Theme.DARK) {
+                darkButton.setClassName(String.format("%s %s", darkButton.getClassName(), "active"));
+            } else {
+                lightButton.setClassName(String.format("%s %s", lightButton.getClassName(), "active"));
+            }
             ((EventTarget) darkButton).addEventListener("click", (event) -> {
                 if (profile.getTheme() == Theme.DARK) {
                     return;
                 }
-                log.info("Set theme to dark.");
                 if (lightButton.getClassName().contains("active")) {
                     lightButton.setClassName(lightButton.getClassName().replace("active", ""));
                 }
@@ -40,7 +46,6 @@ public class Settings extends ViewController {
                 if (profile.getTheme() == Theme.LIGHT) {
                     return;
                 }
-                log.info("Set theme to light.");
                 if (darkButton.getClassName().contains("active")) {
                     darkButton.setClassName(darkButton.getClassName().replace("active", ""));
                 }
@@ -60,5 +65,6 @@ public class Settings extends ViewController {
     private void updateTheme(Profile profile, Theme dark) {
         profile.updateStyle(dark);
         ProfileManager.getInstance().save(false);
+        init();
     }
 }

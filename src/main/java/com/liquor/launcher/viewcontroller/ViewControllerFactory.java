@@ -1,6 +1,7 @@
 package com.liquor.launcher.viewcontroller;
 
 import com.liquor.launcher.viewcontroller.impl.Default;
+import javafx.scene.web.WebEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 public class ViewControllerFactory {
 
 
-    public static IViewController produceViewController(String name, Document document) {
+    public static IViewController produceViewController(String name, WebEngine document) {
         Optional<RegisteredController> registeredController = RegisteredController.find(name);
         if (!registeredController.isPresent()) {
             log.error("Could not find registered view controller " + name);
@@ -42,9 +43,9 @@ public class ViewControllerFactory {
         return new Default();
     }
 
-    private static IViewController produceViewController(RegisteredController controller, Document document) {
+    private static IViewController produceViewController(RegisteredController controller, WebEngine document) {
         try {
-            Constructor<?> constructor = controller.getReferencedClass().getConstructor(Document.class);
+            Constructor<?> constructor = controller.getReferencedClass().getConstructor(WebEngine.class);
 
             return (IViewController) constructor.newInstance(document);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {

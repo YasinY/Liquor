@@ -1,6 +1,7 @@
 package com.liquor.launcher.viewcontroller.impl;
 
 import com.liquor.launcher.viewcontroller.ViewController;
+import javafx.scene.web.WebEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 
@@ -8,8 +9,8 @@ import org.w3c.dom.Document;
 public class Dashboard extends ViewController {
 
 
-    public Dashboard(Document document) {
-        super(document);
+    public Dashboard(WebEngine webEngine) {
+        super(webEngine);
     }
 
     @Override

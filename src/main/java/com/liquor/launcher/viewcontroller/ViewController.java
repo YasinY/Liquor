@@ -3,6 +3,7 @@ package com.liquor.launcher.viewcontroller;
 import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.functionality.theme.Theme;
+import javafx.scene.web.WebEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.html.HTMLHeadElement;
@@ -12,14 +13,16 @@ import java.util.Optional;
 
 public class ViewController implements IViewController {
 
+    protected WebEngine webEngine;
     protected Document document;
 
     public ViewController() {
 
     }
 
-    public ViewController(Document document) {
-        this.document = document;
+    public ViewController(WebEngine webEngine) {
+        this.webEngine = webEngine;
+        this.document = webEngine.getDocument();
     }
 
     @Override
