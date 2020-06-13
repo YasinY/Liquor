@@ -9,7 +9,8 @@ Connect entfernen, lol
 -- VPN --
 Connect hinzufügen
 Scrollbar bei den städten default-visibility setzen
-städte d-none geben (nach login werden die eingeblendet, wie auch bei connect)
+städte d-none geben (nach login werden die eingeblendet)
+connect d-none geben (nach login werden die eingeblendet)
 disconnected auf d-none setzen (wird auch nach login eingefügt)
 
 

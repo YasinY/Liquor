@@ -19,10 +19,10 @@ public class TotalTimeTask implements ITask {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             Optional<Profile> potentialProfile = ProfileManager.getInstance().getSelectedProfile();
             potentialProfile.ifPresent(profile -> {
-                profile.setTotalTime(profile.getTotalTime() + 1);
+                profile.setMinutes(profile.getMinutes() + 1);
                 ProfileManager.getInstance().save(false);
                 log.info("1 minute has passed..");
             });
-        }, 0, 1, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.SECONDS);
     }
 }

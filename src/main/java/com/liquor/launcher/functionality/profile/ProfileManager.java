@@ -6,7 +6,6 @@ import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.peer.LightweightPeer;
 import java.util.Optional;
 
 @Slf4j
@@ -23,7 +22,7 @@ public class ProfileManager {
     }
 
     public boolean init() {
-        selectedProfile = Profile.builder().theme(Theme.LIGHT).totalTime(0).build();
+        selectedProfile = Profile.builder().theme(Theme.LIGHT).minutes(0).build();
         return save(false);
     }
 

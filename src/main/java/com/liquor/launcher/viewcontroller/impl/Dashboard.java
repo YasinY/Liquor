@@ -1,6 +1,8 @@
 package com.liquor.launcher.viewcontroller.impl;
 
 import com.google.gson.Gson;
+import com.liquor.launcher.functionality.profile.Profile;
+import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.model.CheckIpModel;
 import com.liquor.launcher.viewcontroller.ViewController;
 import javafx.scene.web.WebEngine;
@@ -10,6 +12,7 @@ import org.w3c.dom.NodeList;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
+import java.util.Optional;
 import java.util.Scanner;
 
 @Slf4j
@@ -38,7 +41,12 @@ public class Dashboard extends ViewController {
         paragraphs.item(2).setTextContent("City: " + model.getCity());
         paragraphs.item(3).setTextContent("Country: " + model.getCountry());
         paragraphs.item(4).setTextContent("Using a VPN? " + (model.isUsingVpn() ? "yes" : "no"));
-        paragraphs.item(5).setTextContent("Time spent on this application: ");
+
+        final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
+        if(selectedProfile.isPresent()) {
+            Profile profile = selectedProfile.get();
+            paragraphs.item(5).setTextContent(String.format("Time spent on this application: %d D %d H %d M", profile.getDays(), profile.getHours(), profile.getMinutes() % 60));
+        }
         log.info("Dashboard action taken");
 
     }

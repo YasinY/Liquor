@@ -21,7 +21,7 @@ public class Profile {
 
     @Builder.Default
     @SerializedName("total-time-spent")
-    private int totalTime = 0;
+    private int minutes = 0;
 
     @Builder.Default
     @SerializedName("selected-theme")
@@ -29,7 +29,7 @@ public class Profile {
 
     @Override
     public String toString() {
-        return "[Total time spent: " + totalTime + ", current theme: " + theme + "]";
+        return "[Total time spent: " + minutes + " minutes, current theme: " + theme + "]";
     }
 
     @Override
@@ -53,16 +53,19 @@ public class Profile {
         });
     }
 
-    public int getSeconds() {
-        return totalTime * 60;
-    }
-
     public int getMinutes() {
-        return totalTime;
+        return minutes;
+    }
+    public int getHours() {
+        return minutes / 60;
     }
 
-    public int getHours() {
-        return totalTime / 60;
+    public int getDays() {
+        return getHours() / 24;
+    }
+
+    public int getSeconds() {
+        return getMinutes() * 60;
     }
 
 }
