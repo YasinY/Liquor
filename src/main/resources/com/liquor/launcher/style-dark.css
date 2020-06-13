@@ -1,7 +1,10 @@
+
+/* Hide scrollbars */
 body {
-    overflow: hidden; /* Hide scrollbars */
+    overflow: hidden;
 }
 
+/* Center Content */
 html, body {
     height: 100%;
     background-color: #111111;
@@ -14,6 +17,7 @@ html, body {
     align-items: center;
 }
 
+/* Set dynamic colors */
 .OwnBG {
     background-color: #111111;
 }
@@ -26,6 +30,7 @@ html, body {
     border-color: white;
 }
 
+/* Input Field Border */
 input:focus,
 input {
     outline: 0px !important;
