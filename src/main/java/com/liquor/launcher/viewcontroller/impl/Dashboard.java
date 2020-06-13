@@ -36,16 +36,16 @@ public class Dashboard extends ViewController {
         String json = scannedInput.hasNext() ? scannedInput.next() : "";
         CheckIpModel model = gson.fromJson(json, CheckIpModel.class);
         NodeList paragraphs = document.getElementsByTagName("p");
-        paragraphs.item(1).setTextContent(model.getIpAddress());
-        paragraphs.item(3).setTextContent(model.getDns());
-        paragraphs.item(5).setTextContent(model.getCity());
-        paragraphs.item(7).setTextContent(model.getCountry());
-        paragraphs.item(9).setTextContent((model.isUsingVpn() ? "yes" : "no"));
+        paragraphs.item(1).setTextContent(" " + model.getIpAddress());
+        paragraphs.item(3).setTextContent("" + model.getDns());
+        paragraphs.item(5).setTextContent(" " + model.getCity());
+        paragraphs.item(7).setTextContent(" " + model.getCountry());
+        paragraphs.item(9).setTextContent(" " + (model.isUsingVpn() ? "yes" : "no"));
 
         final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
         if(selectedProfile.isPresent()) {
             Profile profile = selectedProfile.get();
-           paragraphs.item(11).setTextContent(String.format("Time spent on this application: %d D %d H %d M", profile.getDays(), profile.getHours(), profile.getMinutes() % 60));
+           paragraphs.item(11).setTextContent(String.format("%d D %d H %d M", profile.getDays(), profile.getHours(), profile.getMinutes() % 60));
         }
         log.info("Dashboard action taken");
 
