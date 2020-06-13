@@ -29,10 +29,6 @@
                 <h6 class="OwnTXT">Current IP: <span class="badge badge-info">88.8.888.888</span></h6>
             </div>
             <div class=" d-flex justify-content-center mb-2">
-                <button type="button" class="btn btn-success d-none">Connect</button>
-                <button type="button" class="btn btn-danger d-none">Disconnect</button>
-            </div>
-            <div class=" d-flex justify-content-center mb-2">
                 <div class="d-none" style="width: 15rem;">
                     <div class="d-flex justify-content-center">
                         <h6 class="OwnTXT">Provided by Perfect Privacy</h6>
@@ -43,6 +39,10 @@
                            id="sample"></a>
                     </div>
                 </div>
+            </div>
+            <div class=" d-flex justify-content-center mb-2">
+                <button type="button" class="btn btn-success d-none">Connect</button>
+                <button type="button" class="btn btn-danger d-none">Disconnect</button>
             </div>
             <div class="d-flex justify-content-center OwnBG">
                 <div class="card OwnBG border-0 mb-2" style="width: 18rem;">
@@ -89,6 +89,17 @@
                     <div class="alert alert-danger d-none" role="alert">
                         Wrong username and/or password!
                     </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <h6 class="OwnTXT">Remember Me</h6>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary" id="autoConnectOnButton">
+                        <input type="radio" name="options" autocomplete="off"> On
+                    </label>
+                    <label class="btn btn-secondary" id="autoConnectOffButton">
+                        <input type="radio" name="options" autocomplete="off"> Off
+                    </label>
                 </div>
             </div>
             <div class="d-flex justify-content-center">
