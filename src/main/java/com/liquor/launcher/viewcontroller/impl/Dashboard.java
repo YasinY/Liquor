@@ -36,11 +36,11 @@ public class Dashboard extends ViewController {
         String json = scannedInput.hasNext() ? scannedInput.next() : "";
         CheckIpModel model = gson.fromJson(json, CheckIpModel.class);
         NodeList paragraphs = document.getElementsByTagName("p");
-        paragraphs.item(0).setTextContent("IP: " + model.getIpAddress());
-        paragraphs.item(1).setTextContent("DNS: " + model.getDns());
-        paragraphs.item(2).setTextContent("City: " + model.getCity());
-        paragraphs.item(3).setTextContent("Country: " + model.getCountry());
-        paragraphs.item(4).setTextContent("Using a VPN? " + (model.isUsingVpn() ? "yes" : "no"));
+        paragraphs.item(1).setTextContent(model.getIpAddress());
+        paragraphs.item(3).setTextContent("DNS: " + model.getDns());
+        paragraphs.item(5).setTextContent("City: " + model.getCity());
+        paragraphs.item(7).setTextContent("Country: " + model.getCountry());
+        paragraphs.item(9).setTextContent("Using a VPN? " + (model.isUsingVpn() ? "yes" : "no"));
 
         final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
         if(selectedProfile.isPresent()) {

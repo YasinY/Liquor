@@ -65,11 +65,11 @@ public class ProfileManager {
         File defaultDirectory = new File(RegisteredResource.PROFILE.getFullDirectoryPath());
         directoryChooser.setInitialDirectory(defaultDirectory);
         File selectedDirectory = directoryChooser.showDialog(new Stage());
-        if(selectedDirectory != null) {
+        if(selectedDirectory != null && RegisteredResource.PROFILE.exists()) {
             try {
-                Files.copy(Paths.get(RegisteredResource.PROFILE.getFullFilePath()), selectedDirectory.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(Paths.get(RegisteredResource.PROFILE.getFullFilePath()), selectedDirectory.toPath());
             } catch (IOException e) {
-                log.error("Error copying file..");
+                e.printStackTrace();
             }
         }
         return true;
