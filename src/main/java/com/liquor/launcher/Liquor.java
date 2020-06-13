@@ -8,8 +8,6 @@ import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.splashscreen.SplashScreen;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
-import com.liquor.launcher.window.ActiveWebViews;
-import com.liquor.prerequisites.openvpn.OpenVPNResource;
 import com.liquor.resourcemanagement.ResourceLoader;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import javafx.application.Application;
@@ -29,7 +27,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 
@@ -86,7 +84,7 @@ public class Liquor extends Application {
     private void initialiseWebView(String viewName) {
         log.info("Getting html..");
         Optional<URL> url = ResourceLoader.getHTML(viewName);
-        if(url == null) {
+        if (url == null) {
             System.out.println("FUCK");
         }
         url.ifPresent(consumer -> {
@@ -115,18 +113,9 @@ public class Liquor extends Application {
     }
 
     private synchronized void initialiseWebView(String viewName, URL consumer) {
+        webView.getEngine().load(consumer.toExternalForm());
+        webView.getEngine().getLoadWorker().stateProperty().addListener(getChangedListener(viewName));
         log.info("Loading view..");
-        if(ActiveWebViews.ACTIVE_WEB_VIEWS.containsKey(viewName)) {
-            webView = ActiveWebViews.ACTIVE_WEB_VIEWS.get(viewName);
-            log.info("Loading already active web view.. (" + viewName + ")");
-
-        } else {
-            webView.getEngine().load(consumer.toExternalForm());
-            log.info("Adding listener..");
-            ActiveWebViews.ACTIVE_WEB_VIEWS.put(viewName, webView);
-            log.info("Creating active web view..");
-            webView.getEngine().getLoadWorker().stateProperty().addListener(getChangedListener(viewName));
-        }
     }
 
     private ChangeListener<Object> getChangedListener(String viewName) {
