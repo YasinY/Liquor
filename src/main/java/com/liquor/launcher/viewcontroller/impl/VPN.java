@@ -11,6 +11,7 @@ import com.liquor.resourcemanagement.registered.RegisteredResource;
 import com.sun.webkit.dom.HTMLAnchorElementImpl;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
+import javafx.scene.control.Alert;
 import javafx.scene.web.WebEngine;
 import javafx.util.Duration;
 import lombok.SneakyThrows;
@@ -165,27 +166,35 @@ public class VPN extends ViewController {
         }, false);
     }
 
+    @SneakyThrows
     private void connectToVpn() {
-        Runnable runnable = new Runnable() {
-            @SneakyThrows
-            @Override
-            public void run() {
-                ProcessBuilder builder = new ProcessBuilder(
-                        "cmd.exe", "/c", "openvpn --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config " + selectedConfiguration + ".ovpn"
-                );
-                builder.redirectErrorStream(true);
-                vpnConnection = builder.start();
-                BufferedReader r = new BufferedReader(new InputStreamReader(vpnConnection.getInputStream()));
-                String line;
-                while (true) {
-                    line = r.readLine();
-                    if (line == null) {
-                        break;
-                    }
-                    log.info(line);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Connected!");
+        alert.setContentText("Successfully connected to " + selectedConfiguration + ".");
+        Runnable runnable = () -> {
+            ProcessBuilder builder = new ProcessBuilder(
+                    "cmd.exe", "/c", "openvpn --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config " + selectedConfiguration + ".ovpn"
+            );
+
+            builder.redirectErrorStream(true);
+            vpnConnection = builder.start();
+            BufferedReader r = new BufferedReader(new InputStreamReader(vpnConnection.getInputStream()));
+            String line;
+            while (true) {
+                line = r.readLine();
+                if (line == null) {
+                    break;
                 }
-                vpnConnection.waitFor();
+                if(line.contains("netsh command failed")) {
+                    //todo notify failure here
+                }
+                if(line.contains("End ipconfig commands for register-dns...")) {
+                    //todo notify success here
+                }
+                log.info(line);
             }
+            alert.show();
+            vpnConnection.waitFor();
         };
         currentThread = new Thread(runnable);
         currentThread.setDaemon(true);

@@ -11,6 +11,7 @@ public enum RegisteredController {
     VPN(VPN.class),
     DEFAULT(Default.class),
     STATISTICS(Statistics.class),
+    AUTHENTICATED(Authenticated.class),
     TERMINAL(Terminal.class),
     SETTINGS(Settings.class);
 

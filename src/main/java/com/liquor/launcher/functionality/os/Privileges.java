@@ -4,13 +4,13 @@ import com.sun.security.auth.module.NTSystem;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Scanner;
 import java.util.stream.Stream;
 
 public class Privileges {
 
-    public static boolean isAdministrator() {
-        return Stream.of(new NTSystem().getGroupIDs()).anyMatch(groupId -> groupId.equalsIgnoreCase("S-1-5-32-544"));
-    }
+
 
     public String openVPNPath() {
         return "setx path \"%path\";\"C:\\Program Files\\OpenVPN\\bin\"";

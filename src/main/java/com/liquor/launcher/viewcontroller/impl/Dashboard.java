@@ -40,7 +40,7 @@ public class Dashboard extends ViewController {
         paragraphs.item(3).setTextContent( model.getDns());
         paragraphs.item(5).setTextContent( model.getCity());
         paragraphs.item(7).setTextContent(model.getCountry());
-        paragraphs.item(9).setTextContent((model.isUsingVpn() ? "yes" : "no"));
+        paragraphs.item(9).setTextContent((model.isUsingVpn() ? "Yes" : "No"));
 
         final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
         if(selectedProfile.isPresent()) {
