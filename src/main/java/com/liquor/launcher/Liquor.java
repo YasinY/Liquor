@@ -1,6 +1,7 @@
 package com.liquor.launcher;
 
 import com.liquor.launcher.annotations.Native;
+import com.liquor.launcher.functionality.os.Privileges;
 import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.functionality.theme.Theme;
@@ -19,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -246,6 +248,12 @@ public class Liquor extends Application {
     }
 
     public static void main(String[] args) {
+        if(!Privileges.isAdministrator()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Administrator privileges required");
+            alert.setContentText("Please run this tool with administrative privileges, else features like the VPN will not work!");
+            alert.showAndWait();
+        }
         //Privileges.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
         launch(args);
     }

@@ -1,3 +1,7 @@
 .idea\
 out\
 target\
+
+dependency-reduced-pom.xml
+
+src/main/java/META-INF/MANIFEST.MF

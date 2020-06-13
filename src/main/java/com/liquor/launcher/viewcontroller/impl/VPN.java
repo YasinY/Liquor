@@ -24,17 +24,23 @@ import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLInputElement;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Slf4j
 public class VPN extends ViewController {
 
 
+    Thread currentThread;
+
     Process vpnConnection;
+
+    private String selectedConfiguration;
 
     public VPN(WebEngine webEngine) {
         super(webEngine);
@@ -95,6 +101,11 @@ public class VPN extends ViewController {
             HTMLDivElement citiesContainer = (HTMLDivElement) document.getElementById("citiesContainer");
             HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
             HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
+            NodeList cities = document.getElementsByTagName("a");
+            IntStream.range(0, cities.getLength()).forEach(index -> {
+                HTMLAnchorElementImpl element = (HTMLAnchorElementImpl) cities.item(index);
+                addCityClickEvent(element, cities, index);
+            });
             String username = getValidInput(usernameInput);
             String password = getValidInput(passwordInput);
             if (transition.getStatus() == Animation.Status.RUNNING) {
@@ -109,13 +120,37 @@ public class VPN extends ViewController {
                 handleSuccessful(citiesContainer, username, password);
                 connectButton.setClassName(connectButton.getClassName().replace("d-none", ""));
                 addConnectButtonAction();
-                ((EventTarget) disconnectButton).addEventListener("click", (disconnectEvent) -> {
-                    if (vpnConnection != null) {
-                        vpnConnection.destroyForcibly();
-                    }
-                }, false);
+                addDisconnectButtonAction((EventTarget) disconnectButton);
             }
         };
+    }
+
+    private void addCityClickEvent(HTMLAnchorElementImpl element, NodeList cities, int elementIndex) {
+        ((EventTarget) element).addEventListener("click", (cityEvent) -> {
+            IntStream.range(0, cities.getLength()).forEach(index -> {
+                HTMLAnchorElementImpl otherCity = (HTMLAnchorElementImpl) cities.item(index);
+                if (index == elementIndex) {
+                    return;
+                }
+                otherCity.setClassName(otherCity.getClassName().replace("active", ""));
+            });
+            this.selectedConfiguration = element.getText();
+            element.setClassName(element.getClassName() + " active");
+        }, false);
+    }
+
+    private void addDisconnectButtonAction(EventTarget disconnectButton) {
+        disconnectButton.addEventListener("click", (disconnectEvent) -> {
+            if (vpnConnection != null) {
+                currentThread.interrupt();
+                vpnConnection.destroyForcibly();
+                try {
+                    Runtime.getRuntime().exec("wmic process where \"name like '%openvpn%'\" delete");
+                } catch (IOException e) {
+                    log.error("Couldnt run command to destroy openvpn process.");
+                }
+            }
+        }, false);
     }
 
     private void addConnectButtonAction() {
@@ -136,16 +171,25 @@ public class VPN extends ViewController {
             @Override
             public void run() {
                 ProcessBuilder builder = new ProcessBuilder(
-                        "cmd.exe", "/c", "openvpn --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config Amsterdam.ovpn"
+                        "cmd.exe", "/c", "openvpn --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config " + selectedConfiguration + ".ovpn"
                 );
                 builder.redirectErrorStream(true);
                 vpnConnection = builder.start();
+                BufferedReader r = new BufferedReader(new InputStreamReader(vpnConnection.getInputStream()));
+                String line;
+                while (true) {
+                    line = r.readLine();
+                    if (line == null) {
+                        break;
+                    }
+                    log.info(line);
+                }
                 vpnConnection.waitFor();
             }
         };
-        Thread thread = new Thread(runnable);
-        thread.setDaemon(true);
-        thread.start();
+        currentThread = new Thread(runnable);
+        currentThread.setDaemon(true);
+        currentThread.start();
     }
 
     private void initDisconnectFunction() {
