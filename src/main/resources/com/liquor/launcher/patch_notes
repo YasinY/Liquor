@@ -12,7 +12,7 @@ Scrollbar bei den städten default-visibility setzen
 städte d-none geben (nach login werden die eingeblendet)
 connect d-none geben (nach login werden die eingeblendet)
 disconnected auf d-none setzen (wird auch nach login eingefügt)
-
+remember me (tickbox) mit text daneben "remember data?"
 
 -- CISCO --
 Scrollbar bei den commands visible setzen

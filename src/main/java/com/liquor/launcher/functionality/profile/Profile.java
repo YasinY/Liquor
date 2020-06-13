@@ -27,6 +27,18 @@ public class Profile {
     @SerializedName("selected-theme")
     private Theme theme = Theme.LIGHT;
 
+    @Builder.Default
+    @SerializedName("vpn-username")
+    private String username = "";
+
+    @Builder.Default
+    @SerializedName("vpn-password")
+    private String password = "";
+
+    @Builder.Default
+    @SerializedName("remember-me")
+    private boolean rememberData = false;
+
     @Override
     public String toString() {
         return "[Total time spent: " + minutes + " minutes, current theme: " + theme + "]";
@@ -56,6 +68,7 @@ public class Profile {
     public int getMinutes() {
         return minutes;
     }
+
     public int getHours() {
         return minutes / 60;
     }

@@ -2,6 +2,9 @@ package com.liquor.launcher.viewcontroller.impl;
 
 import com.liquor.launcher.functionality.os.openvpn.perfectprivacy.OpenVPNLocation;
 import com.liquor.launcher.functionality.perfectprivacy.PerfectPrivacyAuthenticator;
+import com.liquor.launcher.functionality.profile.Profile;
+import com.liquor.launcher.functionality.profile.ProfileManager;
+import com.liquor.launcher.security.Decrypter;
 import com.liquor.launcher.viewcontroller.ViewController;
 import com.liquor.prerequisites.openvpn.OpenVPNResource;
 import com.sun.webkit.dom.HTMLAnchorElementImpl;
@@ -18,6 +21,7 @@ import org.w3c.dom.html.HTMLDivElement;
 import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLInputElement;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -33,9 +37,25 @@ public class VPN extends ViewController {
     @Override
     public void load() {
         HTMLElement checkCredentialsButton = (HTMLButtonElement) document.getElementById("checkCredentialsButton");
+        NodeList list = document.getElementsByTagName("input");
+        HTMLInputElement usernameInput = (HTMLInputElement) list.item(0);
+        HTMLInputElement passwordInput = (HTMLInputElement) list.item(1);
+        ProfileManager.getInstance().getSelectedProfile().ifPresent(profile -> {
+            if(!profile.getUsername().isEmpty()) {
+                usernameInput.setValue(profile.getUsername());
+            }
+
+            if(!profile.getPassword().isEmpty()) {
+                passwordInput.setValue(Decrypter.getInstance().decrypt(profile.getPassword()));
+            }
+        });
         fillCities();
         PauseTransition transition = new PauseTransition(Duration.seconds(2));
-        ((EventTarget) checkCredentialsButton).addEventListener("click", checkCredentialsButtonAction(checkCredentialsButton, transition), false);
+        addCheckCredentialsButtonAction(checkCredentialsButton, transition, usernameInput, passwordInput);
+    }
+
+    private void addCheckCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition, HTMLInputElement usernameInput, HTMLInputElement passwordInput) {
+        ((EventTarget) checkCredentialsButton).addEventListener("click", checkCredentialsButtonAction(checkCredentialsButton, transition, usernameInput, passwordInput), false);
     }
 
 
@@ -61,16 +81,13 @@ public class VPN extends ViewController {
         };
     }
 
-    private EventListener checkCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition) {
+    private EventListener checkCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition, HTMLInputElement usernameInput, HTMLInputElement passwordInput) {
         return (event) -> {
+            String username = getValidInput(usernameInput);
+            String password = getValidInput(passwordInput);
             if (transition.getStatus() == Animation.Status.RUNNING) {
                 return;
             }
-            NodeList list = document.getElementsByTagName("input");
-            HTMLInputElement usernameInput = (HTMLInputElement) list.item(0);
-            HTMLInputElement passwordInput = (HTMLInputElement) list.item(1);
-            String username = getValidInput(usernameInput);
-            String password = getValidInput(passwordInput);
             if (invalidCredentials(transition, username, password)) {
                 return;
             }
@@ -79,6 +96,14 @@ public class VPN extends ViewController {
             handleRequest(checkCredentialsButton, transition, successful);
             if (successful) {
                 OpenVPNResource.updateAuthentication(username, password);
+                final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
+                selectedProfile.ifPresent(profile -> {
+                    if(profile.isRememberData()) {
+                        profile.setUsername(username);
+                        profile.setPassword(Decrypter.getInstance().encrypt(password));
+                        ProfileManager.getInstance().save(false);
+                    }
+                });
             }
         };
     }
@@ -129,7 +154,7 @@ public class VPN extends ViewController {
 
     private boolean invalidUsername(PauseTransition transition, String username) {
         HTMLElement notification;
-        if (username.length() < 5 || !username.matches("^[a-zA-Z0-9]{3,}$")) {
+        if (username.length() < 5) {
             notification = getMissingUsernameNotification();
             playNotification(transition, notification);
             return true;
