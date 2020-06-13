@@ -44,3 +44,17 @@ input {
   overflow-y: scroll;
   direction:rtl;
 }
+
+        .carousel-control-next-icon,
+        .carousel-control-prev-icon {
+            filter: invert(1);
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 3%;
+        }
+
+        .carousel-indicators {
+            filter: invert(1);
+        }
