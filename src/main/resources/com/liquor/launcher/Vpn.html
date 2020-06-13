@@ -13,6 +13,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
+    <!-- CSS -->
     <link rel="stylesheet" href="./style-light.css">
 
 </head>
@@ -21,13 +22,19 @@
 <div class="containerCenter">
     <div class="row">
         <div class="col">
+
+            <!-- Connected Status -->
             <div class="d-flex justify-content-center">
                 <h5><span class="badge badge-danger d-none">Disconnected</span></h5>
                 <h5><span class="badge badge-success d-none">Connected</span></h5>
             </div>
+
+            <!-- Current IP -->
             <div class="d-flex justify-content-center">
                 <h6 class="OwnTXT">Current IP: <span class="badge badge-info">88.8.888.888</span></h6>
             </div>
+
+            <!-- Provider and City List-->
             <div class=" d-flex justify-content-center mb-2">
                 <div class="d-none" style="width: 15rem;" id="citiesContainer">
                     <div class="d-flex justify-content-center">
@@ -40,8 +47,12 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Login -->
             <div class="d-flex justify-content-center OwnBG">
                 <div class="card OwnBG border-0 mb-2" style="width: 18rem;" id="loginContainer">
+
+                    <!-- Username -->
                     <div class="input-group mb-1">
                         <div class="input-group-prepend">
                                 <span class="input-group-text OwnBG OwnTXT" id="inputGroup-sizing-default">
@@ -56,6 +67,8 @@
                                aria-label="Sizing example input"
                                placeholder="Username" aria-describedby="inputGroup-sizing-default">
                     </div>
+
+                    <!-- Password -->
                     <div class="input-group">
                         <div class="input-group-prepend">
                                 <span class="input-group-text OwnBG OwnTXT" id="inputGroup-sizing-default">
@@ -70,12 +83,17 @@
                         <input id="passwordInput" type="password" class="form-control" aria-label="Sizing example input"
                                placeholder="Password" aria-describedby="inputGroup-sizing-default">
                     </div>
+
                 </div>
             </div>
+
+            <!-- Connect/Disconnect -->
             <div class=" d-flex justify-content-center mb-2">
                 <button type="button" class="btn btn-success d-none" id="connectButton">Connect</button>
                 <button type="button" class="btn btn-danger d-none" id="disconnectButton">Disconnect</button>
             </div>
+
+            <!-- Login Feedback -->
             <div class="d-flex justify-content-center">
                 <div id="notificationContainer" style="font-size: 12px;">
                     <div class="alert alert-success d-none" role="alert">
@@ -92,6 +110,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Remember Me -->
             <div class="d-flex justify-content-center mb-3">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-secondary disabled">
@@ -118,11 +138,15 @@
                     </label>
                 </div>
             </div>
+
+            <!-- Check Credentials -->
             <div class="d-flex justify-content-center">
                 <button type="button" class="btn btn-success mb-2" style="width: 12rem; font-size: 16px;"
                         id="checkCredentialsButton">Check credentials
                 </button>
             </div>
+
+            <!-- Footer -->
             <footer class="footer">
                 <div class="container">
                     <div class="d-flex justify-content-center">
