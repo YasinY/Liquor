@@ -1,20 +1,26 @@
 package com.liquor.launcher.viewcontroller.impl;
 
+import com.liquor.launcher.functionality.os.openvpn.perfectprivacy.OpenVPNLocation;
 import com.liquor.launcher.functionality.perfectprivacy.PerfectPrivacyAuthenticator;
 import com.liquor.launcher.viewcontroller.ViewController;
 import com.liquor.prerequisites.openvpn.OpenVPNResource;
+import com.sun.webkit.dom.HTMLAnchorElementImpl;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.scene.web.WebEngine;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLButtonElement;
+import org.w3c.dom.html.HTMLDivElement;
 import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLInputElement;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @Slf4j
 public class VPN extends ViewController {
@@ -27,8 +33,32 @@ public class VPN extends ViewController {
     @Override
     public void load() {
         HTMLElement checkCredentialsButton = (HTMLButtonElement) document.getElementById("checkCredentialsButton");
+        fillCities();
         PauseTransition transition = new PauseTransition(Duration.seconds(2));
         ((EventTarget) checkCredentialsButton).addEventListener("click", checkCredentialsButtonAction(checkCredentialsButton, transition), false);
+    }
+
+
+    private void fillCities() {
+        HTMLDivElement cities = (HTMLDivElement) document.getElementById("cities");
+        HTMLAnchorElementImpl citySample = (HTMLAnchorElementImpl) document.getElementById("sample");
+        Stream.of(OpenVPNLocation.values()).map(formatLocation()).forEach(prepareAndAppendCity(cities, citySample));
+    }
+
+    private Consumer<String> prepareAndAppendCity(HTMLDivElement cities, HTMLAnchorElementImpl sample) {
+        return location -> {
+            HTMLAnchorElementImpl clone = (HTMLAnchorElementImpl) sample.cloneNode(true);
+            clone.setClassName(clone.getClassName().replace("d-none", ""));
+            clone.setTextContent(location);
+            cities.appendChild(clone);
+        };
+    }
+
+    private Function<OpenVPNLocation, String> formatLocation() {
+        return location -> {
+            String locationName = location.name().replace("_", " ");
+            return locationName.substring(0, 1).toUpperCase() + locationName.substring(1).toLowerCase();
+        };
     }
 
     private EventListener checkCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition) {
@@ -47,7 +77,7 @@ public class VPN extends ViewController {
 
             boolean successful = PerfectPrivacyAuthenticator.authenticate(username, password);
             handleRequest(checkCredentialsButton, transition, successful);
-            if(successful) {
+            if (successful) {
                 OpenVPNResource.updateAuthentication(username, password);
             }
         };

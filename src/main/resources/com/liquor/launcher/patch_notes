@@ -1,4 +1,29 @@
 - Design aller HTMLs fertigstellen
-- Das LIGHT theme als standard für jede HTML setzen
-- Dark theme für jede HTML fertigstellen
 
+-- ÜBERALL, FOOTER --
+Made with ♥ by Nico Gieseler and Yasin Yazici
+
+-- Dashboard --
+Connect entfernen, lol
+
+-- VPN --
+Connect hinzufügen
+Scrollbar bei den städten default-visibility setzen
+städte d-none geben (nach login werden die eingeblendet, wie auch bei connect)
+disconnected auf d-none setzen (wird auch nach login eingefügt)
+
+
+-- CISCO --
+Scrollbar bei den commands visible setzen
+
+
+
+
+
+-- yasin --
+export und import profile reinhauen
+VPN funktionalität (Runtime.exec(openvpn) (ausgewählte config)
+IP/DNS/usw befüllen im dashboard
+VPN-Städte befüllen programmatisch
+Cisco command auswählbar / anzeigbar
+Cisco commands hinzufügen
