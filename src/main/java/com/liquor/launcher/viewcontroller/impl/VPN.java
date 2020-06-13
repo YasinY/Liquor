@@ -37,25 +37,26 @@ public class VPN extends ViewController {
     @Override
     public void load() {
         HTMLElement checkCredentialsButton = (HTMLButtonElement) document.getElementById("checkCredentialsButton");
+        HTMLDivElement loginContainer = (HTMLDivElement) document.getElementById("loginContainer");
         NodeList list = document.getElementsByTagName("input");
         HTMLInputElement usernameInput = (HTMLInputElement) list.item(0);
         HTMLInputElement passwordInput = (HTMLInputElement) list.item(1);
         ProfileManager.getInstance().getSelectedProfile().ifPresent(profile -> {
-            if(!profile.getUsername().isEmpty()) {
+            if (!profile.getUsername().isEmpty()) {
                 usernameInput.setValue(profile.getUsername());
             }
 
-            if(!profile.getPassword().isEmpty()) {
+            if (!profile.getPassword().isEmpty()) {
                 passwordInput.setValue(Decrypter.getInstance().decrypt(profile.getPassword()));
             }
         });
         fillCities();
         PauseTransition transition = new PauseTransition(Duration.seconds(2));
-        addCheckCredentialsButtonAction(checkCredentialsButton, transition, usernameInput, passwordInput);
+        addCheckCredentialsButtonAction(checkCredentialsButton, transition);
     }
 
-    private void addCheckCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition, HTMLInputElement usernameInput, HTMLInputElement passwordInput) {
-        ((EventTarget) checkCredentialsButton).addEventListener("click", checkCredentialsButtonAction(checkCredentialsButton, transition, usernameInput, passwordInput), false);
+    private void addCheckCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition) {
+        ((EventTarget) checkCredentialsButton).addEventListener("click", checkCredentialsButtonAction(checkCredentialsButton, transition), false);
     }
 
 
@@ -81,8 +82,12 @@ public class VPN extends ViewController {
         };
     }
 
-    private EventListener checkCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition, HTMLInputElement usernameInput, HTMLInputElement passwordInput) {
+    private EventListener checkCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition) {
         return (event) -> {
+
+            HTMLInputElement usernameInput = (HTMLInputElement) document.getElementById("usernameInput");
+            HTMLInputElement passwordInput = (HTMLInputElement) document.getElementById("passwordInput");
+            HTMLDivElement citiesContainer = (HTMLDivElement) document.getElementById("citiesContainer");
             String username = getValidInput(usernameInput);
             String password = getValidInput(passwordInput);
             if (transition.getStatus() == Animation.Status.RUNNING) {
@@ -91,19 +96,21 @@ public class VPN extends ViewController {
             if (invalidCredentials(transition, username, password)) {
                 return;
             }
-
             boolean successful = PerfectPrivacyAuthenticator.authenticate(username, password);
             handleRequest(checkCredentialsButton, transition, successful);
             if (successful) {
                 OpenVPNResource.updateAuthentication(username, password);
                 final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
                 selectedProfile.ifPresent(profile -> {
-                    if(profile.isRememberData()) {
+                    if (profile.isRememberData()) {
                         profile.setUsername(username);
                         profile.setPassword(Decrypter.getInstance().encrypt(password));
                         ProfileManager.getInstance().save(false);
                     }
                 });
+                final HTMLElement loginContainer = (HTMLElement) document.getElementById("loginContainer");
+                loginContainer.setClassName(String.format("%s %s", loginContainer.getClassName(), "d-none"));
+                citiesContainer.setClassName(citiesContainer.getClassName().replace("d-none", ""));
             }
         };
     }

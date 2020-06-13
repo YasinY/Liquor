@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
@@ -67,7 +68,9 @@ public class ProfileManager {
         File selectedDirectory = directoryChooser.showDialog(new Stage());
         if(selectedDirectory != null && RegisteredResource.PROFILE.exists()) {
             try {
-                Files.copy(Paths.get(RegisteredResource.PROFILE.getFullFilePath()), selectedDirectory.toPath());
+                Path source = Paths.get(RegisteredResource.PROFILE.getFullFilePath());
+                Path destination = Paths.get(selectedDirectory.getPath() + source.getFileName().toString());
+                Files.copy(Paths.get(RegisteredResource.PROFILE.getFullFilePath()), destination, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
             }
