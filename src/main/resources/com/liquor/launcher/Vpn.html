@@ -22,15 +22,11 @@
     <div class="row">
         <div class="col">
             <div class="d-flex justify-content-center">
-                <h5><span class="badge badge-danger d-none">Disconnected</span></h5>
+                <h5><span class="badge badge-danger">Disconnected</span></h5>
                 <h5><span class="badge badge-success d-none">Connected</span></h5>
             </div>
             <div class="d-flex justify-content-center">
                 <h6 class="OwnTXT">Current IP: <span class="badge badge-info">88.8.888.888</span></h6>
-            </div>
-            <div class=" d-flex justify-content-center mb-2">
-                <button type="button" class="btn btn-success d-none">Connect</button>
-                <button type="button" class="btn btn-danger d-none">Disconnect</button>
             </div>
             <div class=" d-flex justify-content-center mb-2">
                 <div class="d-none" style="width: 15rem;" id="citiesContainer">
@@ -76,8 +72,8 @@
                 </div>
             </div>
             <div class=" d-flex justify-content-center mb-2">
-                <button type="button" class="btn btn-success d-none">Connect</button>
-                <button type="button" class="btn btn-danger d-none">Disconnect</button>
+                <button type="button" class="btn btn-success d-none" id="connectButton">Connect</button>
+                <button type="button" class="btn btn-danger d-none" id="disconnectButton">Disconnect</button>
             </div>
             <div class="d-flex justify-content-center">
                 <div id="notificationContainer" style="font-size: 12px;">

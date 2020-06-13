@@ -88,6 +88,8 @@ public class VPN extends ViewController {
             HTMLInputElement usernameInput = (HTMLInputElement) document.getElementById("usernameInput");
             HTMLInputElement passwordInput = (HTMLInputElement) document.getElementById("passwordInput");
             HTMLDivElement citiesContainer = (HTMLDivElement) document.getElementById("citiesContainer");
+            HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
+            HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
             String username = getValidInput(usernameInput);
             String password = getValidInput(passwordInput);
             if (transition.getStatus() == Animation.Status.RUNNING) {
@@ -99,20 +101,49 @@ public class VPN extends ViewController {
             boolean successful = PerfectPrivacyAuthenticator.authenticate(username, password);
             handleRequest(checkCredentialsButton, transition, successful);
             if (successful) {
-                OpenVPNResource.updateAuthentication(username, password);
-                final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
-                selectedProfile.ifPresent(profile -> {
-                    if (profile.isRememberData()) {
-                        profile.setUsername(username);
-                        profile.setPassword(Decrypter.getInstance().encrypt(password));
-                        ProfileManager.getInstance().save(false);
-                    }
-                });
-                final HTMLElement loginContainer = (HTMLElement) document.getElementById("loginContainer");
-                loginContainer.setClassName(String.format("%s %s", loginContainer.getClassName(), "d-none"));
-                citiesContainer.setClassName(citiesContainer.getClassName().replace("d-none", ""));
+                handleSuccessful(citiesContainer, username, password);
+                connectButton.setClassName(connectButton.getClassName().replace("d-none", ""));
+                addConnectButtonAction();
+                ((EventTarget) disconnectButton).addEventListener("click", (disconnectEvent) -> {
+                    log.info("Disconnecting..");
+                }, false);
             }
         };
+    }
+
+    private void addConnectButtonAction() {
+        HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
+        HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
+        ((EventTarget) connectButton).addEventListener("click", (connectEvent) -> {
+            connectButton.setClassName(String.format("%s %s", connectButton.getClassName(), "d-none"));
+            disconnectButton.setClassName(disconnectButton.getClassName().replace("d-none", ""));
+            initDisconnectFunction();
+            log.info("Connecting to VPN");
+        }, false);
+    }
+
+    private void initDisconnectFunction() {
+        HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
+        HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
+        ((EventTarget) disconnectButton).addEventListener("click", (disconnectEvent) -> {
+            disconnectButton.setClassName(String.format("%s %s", disconnectButton.getClassName(), "d-none"));
+            connectButton.setClassName(connectButton.getClassName().replace("d-none", ""));
+        }, false);
+    }
+
+    private void handleSuccessful(HTMLDivElement citiesContainer, String username, String password) {
+        OpenVPNResource.updateAuthentication(username, password);
+        final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
+        selectedProfile.ifPresent(profile -> {
+            if (profile.isRememberData()) {
+                profile.setUsername(username);
+                profile.setPassword(Decrypter.getInstance().encrypt(password));
+                ProfileManager.getInstance().save(false);
+            }
+        });
+        final HTMLElement loginContainer = (HTMLElement) document.getElementById("loginContainer");
+        loginContainer.setClassName(String.format("%s %s", loginContainer.getClassName(), "d-none"));
+        citiesContainer.setClassName(citiesContainer.getClassName().replace("d-none", ""));
     }
 
     private String getValidInput(HTMLInputElement usernameInput) {
