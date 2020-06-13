@@ -3,15 +3,21 @@
 -- ÜBERALL, FOOTER --
 Made with ♥ by Nico Gieseler and Yasin Yazici
 
+-- Dashboard --
+Connect entfernen, lol
+
 -- VPN --
 Scrollbar bei den städten default-visibility setzen
 remember me (toggle button) mit text daneben "remember data?"
+center time wasted
+progress bar in vpn
 
 -- CISCO --
 Scrollbar bei den commands visible setzen
 
 
--- yasin (stinkt)--
+
+-- yasin --
 export und import profile reinhauen
 VPN funktionalität (Runtime.exec(openvpn) (ausgewählte config)
 IP/DNS/usw befüllen im dashboard
