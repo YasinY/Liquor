@@ -34,6 +34,7 @@ public class ProfileManager {
         }
         String profile = gson.toJson(selectedProfile);
         FileSystem.writeContent(RegisteredResource.PROFILE, false, open, profile);
+        log.info("Saved profile!");
         return true;
     }
 

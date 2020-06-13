@@ -24,6 +24,5 @@ Scrollbar bei den commands visible setzen
 export und import profile reinhauen
 VPN funktionalität (Runtime.exec(openvpn) (ausgewählte config)
 IP/DNS/usw befüllen im dashboard
-VPN-Städte befüllen programmatisch
 Cisco command auswählbar / anzeigbar
 Cisco commands hinzufügen
