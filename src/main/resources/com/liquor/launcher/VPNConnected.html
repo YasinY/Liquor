@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./style-light.css">
+
+</head>
+
+<body>
+<div class="containerCenter">
+    <div class="row">
+        <div class="col">
+
+            <!-- Connected Status -->
+            <div class="d-flex justify-content-center">
+                <h5><span class="badge badge-danger d-none">Disconnected</span></h5>
+                <h5><span class="badge badge-success d-none">Connected</span></h5>
+            </div>
+
+            <!-- Current IP -->
+            <div class="d-flex justify-content-center">
+                <h6 class="OwnTXT">Current IP: <span class="badge badge-info">88.8.888.888</span></h6>
+            </div>
+
+            <!-- Provider and City List-->
+            <div class="d-flex justify-content-center mb-2">
+                <div style="width: 15rem;" id="citiesContainer">
+                    <div class="d-flex justify-content-center mb-1">
+                        <h6 class="OwnTXT">Provided by Perfect Privacy</h6>
+                    </div>
+                    <div class="list-group addscrollbar" role="tablist" id="cities">
+                        <a href="#"
+                           class="OwnTXT OwnBG OwnBorder list-group-item list-group-item-action list-group-item-light d-none"
+                           id="sample"></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connect/Disconnect -->
+            <div class=" d-flex justify-content-center mb-2">
+                <button type="button" class="btn btn-success " id="connectButton">Connect</button>
+                <button type="button" class="btn btn-danger d-none" id="disconnectButton">Disconnect</button>
+            </div>
+
+            <!-- Connect Feedback -->
+            <div class="d-flex justify-content-center">
+                <div id="notificationContainer" style="font-size: 12px;">
+                    <div class="alert alert-success" role="alert">
+                        Successfully connected.
+                    </div>
+                    <div class="alert alert-success d-none" role="alert">
+                        Successfully disconnected.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-muted OwnTXT" style="font-size: 10px;">Made with ♥ by Nico Gieseler and Yasin Yazici</span>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
