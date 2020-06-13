@@ -13,7 +13,8 @@ städte d-none geben (nach login werden die eingeblendet)
 connect d-none geben (nach login werden die eingeblendet)
 disconnected auf d-none setzen (wird auch nach login eingefügt)
 remember me (tickbox) mit text daneben "remember data?"
-
+progress bar in vpn
+center time wasted
 -- CISCO --
 Scrollbar bei den commands visible setzen
 
