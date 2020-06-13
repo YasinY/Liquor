@@ -1,11 +1,11 @@
 package com.liquor.launcher.viewcontroller.impl;
 
-import com.liquor.prerequisites.openvpn.OpenVPNLocation;
 import com.liquor.launcher.functionality.perfectprivacy.PerfectPrivacyAuthenticator;
 import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.security.Decrypter;
 import com.liquor.launcher.viewcontroller.ViewController;
+import com.liquor.prerequisites.openvpn.OpenVPNLocation;
 import com.liquor.prerequisites.openvpn.OpenVPNResource;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import com.sun.webkit.dom.HTMLAnchorElementImpl;
@@ -23,9 +23,9 @@ import org.w3c.dom.html.HTMLDivElement;
 import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLInputElement;
 
-import java.io.PrintStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Optional;
-import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -33,6 +33,8 @@ import java.util.stream.Stream;
 @Slf4j
 public class VPN extends ViewController {
 
+
+    Process vpnConnection;
 
     public VPN(WebEngine webEngine) {
         super(webEngine);
@@ -108,7 +110,9 @@ public class VPN extends ViewController {
                 connectButton.setClassName(connectButton.getClassName().replace("d-none", ""));
                 addConnectButtonAction();
                 ((EventTarget) disconnectButton).addEventListener("click", (disconnectEvent) -> {
-                    log.info("Disconnecting..");
+                    if (vpnConnection != null) {
+                        vpnConnection.destroyForcibly();
+                    }
                 }, false);
             }
         };
@@ -125,13 +129,23 @@ public class VPN extends ViewController {
             connectToVpn();
         }, false);
     }
-    @SneakyThrows
+
     private void connectToVpn() {
-        String path = "openvpn --config " + RegisteredResource.AUTH.getFullDirectoryPath() + "Amsterdam.ovpn";
-        Process cmd = Runtime.getRuntime().exec(path);
-        Scanner s = new Scanner(cmd.getInputStream());
-        System.out.println(s.next());
-        System.setOut(new PrintStream(cmd.getOutputStream()));
+        Runnable runnable = new Runnable() {
+            @SneakyThrows
+            @Override
+            public void run() {
+                ProcessBuilder builder = new ProcessBuilder(
+                        "cmd.exe", "/c", "openvpn --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config Amsterdam.ovpn"
+                );
+                builder.redirectErrorStream(true);
+                vpnConnection = builder.start();
+                vpnConnection.waitFor();
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void initDisconnectFunction() {

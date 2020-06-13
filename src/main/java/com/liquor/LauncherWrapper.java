@@ -10,11 +10,8 @@ import java.io.IOException;
 public class LauncherWrapper {
 
     public static void main(String[] args) throws IOException {
-        Decrypter decrypter = new Decrypter();
-        decrypter.encryptConfigs();
 
         OpenVPNResource.checkOpenVPN();
-        OpenVPNResource.exportConfigurations(false);
         new SplashScreen().showSplash();
     }
 

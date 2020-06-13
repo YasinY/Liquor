@@ -1,16 +1,24 @@
 package com.liquor.launcher.viewcontroller.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.viewcontroller.ViewController;
+import javafx.scene.control.Alert;
 import javafx.scene.web.WebEngine;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.Document;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLElement;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class Settings extends ViewController {
@@ -25,6 +33,7 @@ public class Settings extends ViewController {
         HTMLElement darkButton = (HTMLElement) document.getElementById("darkButton");
         HTMLElement lightButton = (HTMLElement) document.getElementById("lightButton");
         HTMLElement exportProfileButton = (HTMLElement) document.getElementById("exportProfileButton");
+        HTMLElement importProfileButton = (HTMLElement) document.getElementById("importProfileButton");
         Optional<Profile> potentialProfile = ProfileManager.getInstance().getSelectedProfile();
         if (potentialProfile.isPresent()) {
             Profile profile = potentialProfile.get();
@@ -32,9 +41,36 @@ public class Settings extends ViewController {
             addDarkButtonListener(darkButton, lightButton, profile);
             addLightButtonListener(darkButton, lightButton, profile);
             addExportProfileButtonListener((EventTarget) exportProfileButton);
+            addImportProfileButtonListener((EventTarget) importProfileButton);
         } else {
             log.error("Profile not present!");
         }
+    }
+
+    private void addImportProfileButtonListener(EventTarget importProfileButton) {
+        importProfileButton.addEventListener("click", (event) -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Please choose a profile");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Liquor profile", "*.lqp"));
+            fileChooser.setInitialFileName("profile");
+            File file = fileChooser.showOpenDialog(new Stage());
+            if(file != null) {
+                System.out.println("Chose file " + file);
+                Gson gson = new Gson();
+                try {
+                    Profile profile = gson.fromJson(Files.lines(file.toPath()).collect(Collectors.joining()), Profile.class);
+                    ProfileManager.getInstance().setSelectedProfile(profile);
+                    ProfileManager.getInstance().save(false);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setHeaderText("Saved!");
+                    alert.setContentText("Successfully imported profile. Restart the tool for final changes to occur.");
+                    alert.show();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, false);
     }
 
     private void toggleActiveStates(HTMLElement darkButton, HTMLElement lightButton, Profile profile) {

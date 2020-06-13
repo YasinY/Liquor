@@ -20,3 +20,6 @@ import profile reinhauen
 VPN funktionalität (Runtime.exec(openvpn) (ausgewählte config)
 Cisco command auswählbar / anzeigbar
 Cisco commands hinzufügen
+
+remember me auf none setzen
+speicher die auswahl

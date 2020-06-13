@@ -34,7 +34,8 @@ public class ResourceLoader {
     }
     public static Optional<URL> getResourceFile(String name, String extension, Class context) {
         String completeName = name + "." + extension;
-        return Optional.ofNullable(context.getResource(completeName));
+        System.out.println("Getting resource file " + completeName + " on context " + context.getName());
+        return Optional.of(context.getResource(completeName));
     }
 
     public static Optional<InputStream> getResourceStream(String name, String extension, Class context) {
@@ -60,6 +61,7 @@ public class ResourceLoader {
     }
 
     public static Optional<URL> getHTML(String name) {
+        log.info("Retrieving html " + name + "");
         return getResourceFile(name, "html", Liquor.class);
     }
 
