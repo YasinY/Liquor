@@ -23,6 +23,6 @@ public class TotalTimeTask implements ITask {
                 ProfileManager.getInstance().save(false);
                 log.info("1 minute has passed..");
             });
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.MINUTES);
     }
 }
