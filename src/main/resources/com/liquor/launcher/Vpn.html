@@ -22,11 +22,15 @@
     <div class="row">
         <div class="col">
             <div class="d-flex justify-content-center">
-                <h5><span class="badge badge-danger">Disconnected</span></h5>
+                <h5><span class="badge badge-danger d-none">Disconnected</span></h5>
                 <h5><span class="badge badge-success d-none">Connected</span></h5>
             </div>
             <div class="d-flex justify-content-center">
                 <h6 class="OwnTXT">Current IP: <span class="badge badge-info">88.8.888.888</span></h6>
+            </div>
+            <div class=" d-flex justify-content-center mb-2">
+                <button type="button" class="btn btn-success d-none">Connect</button>
+                <button type="button" class="btn btn-danger d-none">Disconnect</button>
             </div>
             <div class="d-flex justify-content-center OwnBG">
                 <div class="card OwnBG border-0 mb-2" style="width: 18rem;">
@@ -83,12 +87,15 @@
         </div>
         <div class="row">
             <div class="row">
-                <div class="col m-2" style="width: 15rem;">
+                <div class="col m-2 d-none" style="width: 15rem;">
                     <div class="d-flex justify-content-center">
                         <h6 class="OwnTXT">Provided by Perfect Privacy</h6>
                     </div>
                     <div class="list-group addscrollbar" role="tablist" id="cities">
-                        <a href="#" class="OwnTXT OwnBG OwnBorder list-group-item list-group-item-action list-group-item-light d-none" id="sample"></a>
+                        <a href="#"
+                           class="OwnTXT OwnBG OwnBorder list-group-item list-group-item-action list-group-item-light d-none"
+                           id="sample"></a>
+                    </div>
                 </div>
             </div>
         </div>

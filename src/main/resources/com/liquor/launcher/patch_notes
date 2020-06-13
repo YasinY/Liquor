@@ -3,23 +3,15 @@
 -- ÜBERALL, FOOTER --
 Made with ♥ by Nico Gieseler and Yasin Yazici
 
--- Dashboard --
-Connect entfernen, lol
-
 -- VPN --
-Connect hinzufügen
 Scrollbar bei den städten default-visibility setzen
-städte d-none geben (nach login werden die eingeblendet)
-connect d-none geben (nach login werden die eingeblendet)
-disconnected auf d-none setzen (wird auch nach login eingefügt)
-remember me (tickbox) mit text daneben "remember data?"
+remember me (toggle button) mit text daneben "remember data?"
 
 -- CISCO --
 Scrollbar bei den commands visible setzen
 
 
-
--- yasin --
+-- yasin (stinkt)--
 export und import profile reinhauen
 VPN funktionalität (Runtime.exec(openvpn) (ausgewählte config)
 IP/DNS/usw befüllen im dashboard
