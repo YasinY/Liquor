@@ -1,17 +1,19 @@
 package com.liquor.launcher.viewcontroller.impl;
 
-import com.liquor.launcher.functionality.os.openvpn.perfectprivacy.OpenVPNLocation;
+import com.liquor.prerequisites.openvpn.OpenVPNLocation;
 import com.liquor.launcher.functionality.perfectprivacy.PerfectPrivacyAuthenticator;
 import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.security.Decrypter;
 import com.liquor.launcher.viewcontroller.ViewController;
 import com.liquor.prerequisites.openvpn.OpenVPNResource;
+import com.liquor.resourcemanagement.registered.RegisteredResource;
 import com.sun.webkit.dom.HTMLAnchorElementImpl;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.scene.web.WebEngine;
 import javafx.util.Duration;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventListener;
@@ -21,7 +23,9 @@ import org.w3c.dom.html.HTMLDivElement;
 import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLInputElement;
 
+import java.io.PrintStream;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -37,7 +41,6 @@ public class VPN extends ViewController {
     @Override
     public void load() {
         HTMLElement checkCredentialsButton = (HTMLButtonElement) document.getElementById("checkCredentialsButton");
-        HTMLDivElement loginContainer = (HTMLDivElement) document.getElementById("loginContainer");
         NodeList list = document.getElementsByTagName("input");
         HTMLInputElement usernameInput = (HTMLInputElement) list.item(0);
         HTMLInputElement passwordInput = (HTMLInputElement) list.item(1);
@@ -119,7 +122,16 @@ public class VPN extends ViewController {
             disconnectButton.setClassName(disconnectButton.getClassName().replace("d-none", ""));
             initDisconnectFunction();
             log.info("Connecting to VPN");
+            connectToVpn();
         }, false);
+    }
+    @SneakyThrows
+    private void connectToVpn() {
+        String path = "openvpn --config " + RegisteredResource.AUTH.getFullDirectoryPath() + "Amsterdam.ovpn";
+        Process cmd = Runtime.getRuntime().exec(path);
+        Scanner s = new Scanner(cmd.getInputStream());
+        System.out.println(s.next());
+        System.setOut(new PrintStream(cmd.getOutputStream()));
     }
 
     private void initDisconnectFunction() {

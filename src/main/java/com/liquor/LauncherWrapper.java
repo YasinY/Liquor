@@ -12,7 +12,9 @@ public class LauncherWrapper {
     public static void main(String[] args) throws IOException {
         Decrypter decrypter = new Decrypter();
         decrypter.encryptConfigs();
-        //OpenVPNResource.checkOpenVPN();
+
+        OpenVPNResource.checkOpenVPN();
+        OpenVPNResource.exportConfigurations(false);
         new SplashScreen().showSplash();
     }
 

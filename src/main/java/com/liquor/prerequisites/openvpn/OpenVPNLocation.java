@@ -1,4 +1,4 @@
-package com.liquor.launcher.functionality.os.openvpn.perfectprivacy;
+package com.liquor.prerequisites.openvpn;
 
 public enum OpenVPNLocation {
     AMSTERDAM,
