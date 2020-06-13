@@ -45,7 +45,7 @@ public class Dashboard extends ViewController {
         final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
         if(selectedProfile.isPresent()) {
             Profile profile = selectedProfile.get();
-            paragraphs.item(5).setTextContent(String.format("Time spent on this application: %d D %d H %d M", profile.getDays(), profile.getHours(), profile.getMinutes() % 60));
+           // paragraphs.item(5).setTextContent(String.format("Time spent on this application: %d D %d H %d M", profile.getDays(), profile.getHours(), profile.getMinutes() % 60));
         }
         log.info("Dashboard action taken");
 
