@@ -16,7 +16,6 @@ public enum OpenVPNLocation {
     HONGKONG,
     ISTANBUL,
     LONDON,
-    LOS_ANGELES,
     MADRID,
     MALMOE,
     MANCHESTER,
@@ -25,7 +24,6 @@ public enum OpenVPNLocation {
     MILAN,
     MONTREAL,
     MOSCOW,
-    NEW_YORK,
     NUREMBERG,
     OSLO,
     PARIS,
@@ -37,7 +35,6 @@ public enum OpenVPNLocation {
     STEINSEL,
     STOCKHOLM,
     STRASBOURG,
-    TEL_AVIV,
     TOKYO,
     ZURICH
 }
