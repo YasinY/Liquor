@@ -50,15 +50,18 @@
 
             <!-- Connect/Disconnect -->
             <div class=" d-flex justify-content-center mb-2">
-                <button type="button" class="btn btn-success " id="connectButton">Connect</button>
+                <button type="button" class="btn btn-success" id="connectButton">Connect</button>
                 <button type="button" class="btn btn-danger d-none" id="disconnectButton">Disconnect</button>
             </div>
 
             <!-- Connect Feedback -->
             <div class="d-flex justify-content-center">
                 <div id="notificationContainer" style="font-size: 12px;">
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-success d-none" role="alert">
                         Successfully connected.
+                    </div>
+                    <div class="alert alert-error d-none" role="alert">
+                        Error connecting. Make sure you ran with elevated privileges.
                     </div>
                     <div class="alert alert-success d-none" role="alert">
                         Successfully disconnected.

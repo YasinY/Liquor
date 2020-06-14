@@ -5,43 +5,24 @@ import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.security.Decrypter;
 import com.liquor.launcher.viewcontroller.ViewController;
-import com.liquor.prerequisites.openvpn.OpenVPNLocation;
 import com.liquor.prerequisites.openvpn.OpenVPNResource;
-import com.liquor.resourcemanagement.registered.RegisteredResource;
-import com.sun.webkit.dom.HTMLAnchorElementImpl;
+import com.sun.webkit.dom.HTMLLabelElementImpl;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
-import javafx.scene.control.Alert;
 import javafx.scene.web.WebEngine;
 import javafx.util.Duration;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLButtonElement;
-import org.w3c.dom.html.HTMLDivElement;
 import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLInputElement;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @Slf4j
 public class VPN extends ViewController {
-
-
-    Thread currentThread;
-
-    Process vpnConnection;
-
-    private String selectedConfiguration;
 
     public VPN(WebEngine webEngine) {
         super(webEngine);
@@ -53,6 +34,13 @@ public class VPN extends ViewController {
         NodeList list = document.getElementsByTagName("input");
         HTMLInputElement usernameInput = (HTMLInputElement) list.item(0);
         HTMLInputElement passwordInput = (HTMLInputElement) list.item(1);
+        HTMLLabelElementImpl remember = (HTMLLabelElementImpl) document.getElementById("remember");
+        HTMLLabelElementImpl dontRemember = (HTMLLabelElementImpl) document.getElementById("dontRemember");
+
+        ((EventTarget) remember).addEventListener("click", getEventListener(dontRemember, remember, true), false);
+
+        ((EventTarget) dontRemember).addEventListener("click", getEventListener(remember, dontRemember, false), false);
+
         ProfileManager.getInstance().getSelectedProfile().ifPresent(profile -> {
             if (!profile.getUsername().isEmpty()) {
                 usernameInput.setValue(profile.getUsername());
@@ -62,9 +50,22 @@ public class VPN extends ViewController {
                 passwordInput.setValue(Decrypter.getInstance().decrypt(profile.getPassword()));
             }
         });
-        fillCities();
         PauseTransition transition = new PauseTransition(Duration.seconds(2));
         addCheckCredentialsButtonAction(checkCredentialsButton, transition);
+    }
+
+    private EventListener getEventListener(HTMLLabelElementImpl activeLoser, HTMLLabelElementImpl activeGainer, boolean remember) {
+        return (event) -> {
+            Optional<Profile> potentialProfile = ProfileManager.getInstance().getSelectedProfile();
+            if (potentialProfile.isPresent()) {
+                Profile profile = potentialProfile.get();
+                profile.setRememberData(remember);
+            }
+            activeLoser.setClassName(activeLoser.getClassName().replace("active", ""));
+            if (!activeGainer.getClassName().contains("active")) {
+                activeGainer.setClassName(activeGainer.getClassName() + " active");
+            }
+        };
     }
 
     private void addCheckCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition) {
@@ -72,41 +73,11 @@ public class VPN extends ViewController {
     }
 
 
-    private void fillCities() {
-        HTMLDivElement cities = (HTMLDivElement) document.getElementById("cities");
-        HTMLAnchorElementImpl citySample = (HTMLAnchorElementImpl) document.getElementById("sample");
-        Stream.of(OpenVPNLocation.values()).map(formatLocation()).forEach(prepareAndAppendCity(cities, citySample));
-    }
-
-    private Consumer<String> prepareAndAppendCity(HTMLDivElement cities, HTMLAnchorElementImpl sample) {
-        return location -> {
-            HTMLAnchorElementImpl clone = (HTMLAnchorElementImpl) sample.cloneNode(true);
-            clone.setClassName(clone.getClassName().replace("d-none", ""));
-            clone.setTextContent(location);
-            cities.appendChild(clone);
-        };
-    }
-
-    private Function<OpenVPNLocation, String> formatLocation() {
-        return location -> {
-            String locationName = location.name().replace("_", " ");
-            return locationName.substring(0, 1).toUpperCase() + locationName.substring(1).toLowerCase();
-        };
-    }
-
     private EventListener checkCredentialsButtonAction(HTMLElement checkCredentialsButton, PauseTransition transition) {
         return (event) -> {
 
             HTMLInputElement usernameInput = (HTMLInputElement) document.getElementById("usernameInput");
             HTMLInputElement passwordInput = (HTMLInputElement) document.getElementById("passwordInput");
-            HTMLDivElement citiesContainer = (HTMLDivElement) document.getElementById("citiesContainer");
-            HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
-            HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
-            NodeList cities = document.getElementsByTagName("a");
-            IntStream.range(0, cities.getLength()).forEach(index -> {
-                HTMLAnchorElementImpl element = (HTMLAnchorElementImpl) cities.item(index);
-                addCityClickEvent(element, cities, index);
-            });
             String username = getValidInput(usernameInput);
             String password = getValidInput(passwordInput);
             if (transition.getStatus() == Animation.Status.RUNNING) {
@@ -118,111 +89,24 @@ public class VPN extends ViewController {
             boolean successful = PerfectPrivacyAuthenticator.authenticate(username, password);
             handleRequest(checkCredentialsButton, transition, successful);
             if (successful) {
-                handleSuccessful(citiesContainer, username, password);
-                connectButton.setClassName(connectButton.getClassName().replace("d-none", ""));
-                addConnectButtonAction();
-                addDisconnectButtonAction((EventTarget) disconnectButton);
+                handleSuccessful(username, password);
             }
         };
     }
 
-    private void addCityClickEvent(HTMLAnchorElementImpl element, NodeList cities, int elementIndex) {
-        ((EventTarget) element).addEventListener("click", (cityEvent) -> {
-            IntStream.range(0, cities.getLength()).forEach(index -> {
-                HTMLAnchorElementImpl otherCity = (HTMLAnchorElementImpl) cities.item(index);
-                if (index == elementIndex) {
-                    return;
-                }
-                otherCity.setClassName(otherCity.getClassName().replace("active", ""));
-            });
-            this.selectedConfiguration = element.getText();
-            element.setClassName(element.getClassName() + " active");
-        }, false);
-    }
-
-    private void addDisconnectButtonAction(EventTarget disconnectButton) {
-        disconnectButton.addEventListener("click", (disconnectEvent) -> {
-            if (vpnConnection != null) {
-                currentThread.interrupt();
-                vpnConnection.destroyForcibly();
-                try {
-                    Runtime.getRuntime().exec("wmic process where \"name like '%openvpn%'\" delete");
-                } catch (IOException e) {
-                    log.error("Couldnt run command to destroy openvpn process.");
-                }
-            }
-        }, false);
-    }
-
-    private void addConnectButtonAction() {
-        HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
-        HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
-        ((EventTarget) connectButton).addEventListener("click", (connectEvent) -> {
-            connectButton.setClassName(String.format("%s %s", connectButton.getClassName(), "d-none"));
-            disconnectButton.setClassName(disconnectButton.getClassName().replace("d-none", ""));
-            initDisconnectFunction();
-            log.info("Connecting to VPN");
-            connectToVpn();
-        }, false);
-    }
-
-    @SneakyThrows
-    private void connectToVpn() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("Connected!");
-        alert.setContentText("Successfully connected to " + selectedConfiguration + ".");
-        Runnable runnable = () -> {
-            ProcessBuilder builder = new ProcessBuilder(
-                    "cmd.exe", "/c", "openvpn --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config " + selectedConfiguration + ".ovpn"
-            );
-
-            builder.redirectErrorStream(true);
-            vpnConnection = builder.start();
-            BufferedReader r = new BufferedReader(new InputStreamReader(vpnConnection.getInputStream()));
-            String line;
-            while (true) {
-                line = r.readLine();
-                if (line == null) {
-                    break;
-                }
-                if(line.contains("netsh command failed")) {
-                    //todo notify failure here
-                }
-                if(line.contains("End ipconfig commands for register-dns...")) {
-                    //todo notify success here
-                }
-                log.info(line);
-            }
-            alert.show();
-            vpnConnection.waitFor();
-        };
-        currentThread = new Thread(runnable);
-        currentThread.setDaemon(true);
-        currentThread.start();
-    }
-
-    private void initDisconnectFunction() {
-        HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
-        HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
-        ((EventTarget) disconnectButton).addEventListener("click", (disconnectEvent) -> {
-            disconnectButton.setClassName(String.format("%s %s", disconnectButton.getClassName(), "d-none"));
-            connectButton.setClassName(connectButton.getClassName().replace("d-none", ""));
-        }, false);
-    }
-
-    private void handleSuccessful(HTMLDivElement citiesContainer, String username, String password) {
+    private void handleSuccessful(String username, String password) {
         OpenVPNResource.updateAuthentication(username, password);
         final Optional<Profile> selectedProfile = ProfileManager.getInstance().getSelectedProfile();
         selectedProfile.ifPresent(profile -> {
             if (profile.isRememberData()) {
                 profile.setUsername(username);
                 profile.setPassword(Decrypter.getInstance().encrypt(password));
-                ProfileManager.getInstance().save(false);
             }
+            profile.setAuthenticated(true);
+            ProfileManager.getInstance().save(false);
         });
         final HTMLElement loginContainer = (HTMLElement) document.getElementById("loginContainer");
         loginContainer.setClassName(String.format("%s %s", loginContainer.getClassName(), "d-none"));
-        citiesContainer.setClassName(citiesContainer.getClassName().replace("d-none", ""));
     }
 
     private String getValidInput(HTMLInputElement usernameInput) {
@@ -253,10 +137,7 @@ public class VPN extends ViewController {
         if (invalidUsername(transition, username)) {
             return true;
         }
-        if (invalidPassword(transition, password)) {
-            return true;
-        }
-        return false;
+        return invalidPassword(transition, password);
     }
 
     private boolean invalidPassword(PauseTransition transition, String password) {

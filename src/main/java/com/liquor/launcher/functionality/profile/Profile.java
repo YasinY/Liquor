@@ -39,6 +39,10 @@ public class Profile {
     @SerializedName("remember-me")
     private boolean rememberData = false;
 
+    @Builder.Default
+    @SerializedName("authenticated")
+    private boolean authenticated = false;
+
     @Override
     public String toString() {
         return "[Total time spent: " + minutes + " minutes, current theme: " + theme + "]";

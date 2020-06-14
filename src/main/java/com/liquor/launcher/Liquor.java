@@ -1,7 +1,6 @@
 package com.liquor.launcher;
 
 import com.liquor.launcher.annotations.Native;
-import com.liquor.launcher.functionality.os.Privileges;
 import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.functionality.theme.Theme;
@@ -9,6 +8,8 @@ import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.splashscreen.SplashScreen;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
+import com.liquor.prerequisites.openvpn.OpenVPNResource;
+import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.ResourceLoader;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import javafx.application.Application;
@@ -20,7 +21,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -84,14 +84,24 @@ public class Liquor extends Application {
     }
 
     private void initialiseWebView(String viewName) {
-        log.info("Getting html..");
+        if (viewName.equalsIgnoreCase("VPN")) {
+            Optional<Profile> potentialProfile = ProfileManager.getInstance().getSelectedProfile();
+            if (potentialProfile.isPresent()) {
+                Profile profile = potentialProfile.get();
+                if (profile.isAuthenticated()) {
+                    viewName = "Authenticated";
+                }
+            }
+        }
+        log.info("Rendering " + viewName);
         Optional<URL> url = ResourceLoader.getHTML(viewName);
         if (url == null) {
             System.out.println("FUCK");
         }
+        String finalViewName = viewName;
         url.ifPresent(consumer -> {
             setVisibilities(false);
-            initialiseWebView(viewName, consumer);
+            initialiseWebView(finalViewName, consumer);
         });
     }
 
@@ -182,6 +192,8 @@ public class Liquor extends Application {
     @Override
     public void start(Stage currentStage) throws IOException {
         log.info("Starting application.. ");
+        FileSystem.ensureDirectories(RegisteredResource.AUTH);
+        OpenVPNResource.exportConfigurations(false); //TODO remove when prod
         startup(currentStage);
     }
 
