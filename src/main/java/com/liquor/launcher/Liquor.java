@@ -5,12 +5,10 @@ import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.functionality.timer.TaskManager;
-import com.liquor.launcher.model.CiscoCommandParser;
+import com.liquor.launcher.cisco.CiscoCommandParser;
 import com.liquor.launcher.splashscreen.SplashScreen;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
-import com.liquor.prerequisites.openvpn.OpenVPNResource;
-import com.liquor.resourcemanagement.FileSystem;
 import com.liquor.resourcemanagement.ResourceLoader;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import javafx.application.Application;
@@ -28,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -258,9 +257,10 @@ public class Liquor extends Application {
     public void init() {
     }
 
+    @SneakyThrows
     public static void main(String[] args) {
         //Privileges.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
-        CiscoCommandParser.parse();
+        CiscoCommandParser.initialize().load();
         System.exit(0);
         launch(args);
     }
