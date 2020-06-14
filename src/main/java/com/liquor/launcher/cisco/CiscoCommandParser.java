@@ -1,22 +1,16 @@
 package com.liquor.launcher.cisco;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.liquor.launcher.Liquor;
 import com.liquor.launcher.loaders.JsonLoader;
 import com.liquor.launcher.model.CiscoCommand;
-import com.liquor.resourcemanagement.ResourceLoader;
 import lombok.SneakyThrows;
 
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.*;
 
 public class CiscoCommandParser {
 
@@ -31,9 +25,11 @@ public class CiscoCommandParser {
                 CISCO_COMMANDS.add(CiscoCommand.builder().name(commandName).description(description).build());
             }
 
+            @SneakyThrows
             @Override
             public String filePath() {
                 return getClass().getResource("cisco.json").getPath().substring(1);
+
             }
 
         };

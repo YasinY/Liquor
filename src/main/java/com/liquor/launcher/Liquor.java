@@ -6,6 +6,7 @@ import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.functionality.timer.TaskManager;
 import com.liquor.launcher.cisco.CiscoCommandParser;
+import com.liquor.launcher.model.CiscoCommand;
 import com.liquor.launcher.splashscreen.SplashScreen;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
@@ -31,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -61,6 +63,12 @@ public class Liquor extends Application {
     }
 
     private void loadView(String viewName) {
+        String protocol = this.getClass().getResource("").getProtocol();
+        if (Objects.equals(protocol, "jar")) {
+            if(viewName.equalsIgnoreCase("cisco")) {
+                return;
+            }
+        }
         renderView(viewName, viewName.equalsIgnoreCase("terminal"));
     }
 
@@ -189,9 +197,14 @@ public class Liquor extends Application {
     }
 
 
+    @SneakyThrows
     @Override
     public void start(Stage currentStage) throws IOException {
         log.info("Starting application.. ");
+        String protocol = getClass().getResource("").getProtocol();
+        if (!Objects.equals(protocol, "jar")) {
+            CiscoCommandParser.initialize().load();
+        }
         startup(currentStage);
     }
 
@@ -260,8 +273,7 @@ public class Liquor extends Application {
     @SneakyThrows
     public static void main(String[] args) {
         //Privileges.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
-        CiscoCommandParser.initialize().load();
-        //System.exit(0);
+        System.out.println(CiscoCommandParser.CISCO_COMMANDS.size() + " exist");
         launch(args);
     }
 

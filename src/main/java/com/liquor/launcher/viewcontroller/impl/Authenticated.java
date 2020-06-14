@@ -59,8 +59,10 @@ public class Authenticated extends ViewController {
 
     private void refreshData() {
         CheckIpModel model = IpChecker.getInstance().refresh();
-        document.getElementById("assignedIp").setTextContent(model.getIpAddress());
-        document.getElementById("usingVPN").setTextContent(model.isUsingVpn() ? "Yes" : "No");
+        Platform.runLater(() -> {
+            document.getElementById("assignedIp").setTextContent(model.getIpAddress());
+            document.getElementById("usingVPN").setTextContent(model.isUsingVpn() ? "Yes" : "No");
+        });
     }
 
     private void assignCityActions(NodeList cities) {
