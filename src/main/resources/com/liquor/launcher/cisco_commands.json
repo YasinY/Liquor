@@ -1,0 +1,342 @@
+[
+  {
+    "name": "enable",
+    "description": "",
+    "usage": ""
+  },
+  {
+    "name": "configure terminal",
+    "description": "Logs you into configuration mode",
+    "usage": ""
+  },
+  {
+    "name": "interface fastethernet/number",
+    "description": "Enters interface configuration mode for the specified fast ethernet interface",
+    "usage": ""
+  },
+  {
+    "name": "reload",
+    "description": "An exec mode command that reboots a Cisco switch or router",
+    "usage": ""
+  },
+  {
+    "name": "hostname name",
+    "description": "Sets a host name to the current Cisco network device",
+    "usage": ""
+  },
+  {
+    "name": "copy from-location to-location",
+    "description": "An enable mode command that copies files from one file location to another",
+    "usage": ""
+  },
+  {
+    "name": "copy running-config startup-config",
+    "description": "An enable mode command that saves the active config, replacing the startup config when a Cisco network device initializes",
+    "usage": ""
+  },
+  {
+    "name": "copy startup-config running-config",
+    "description": "An enable mode command that merges the startup config with the currently active config in RAM",
+    "usage": ""
+  },
+  {
+    "name": "erase startup-config",
+    "description": "An enable mode command that deletes the startup config",
+    "usage": ""
+  },
+  {
+    "name": "ip address ip-address mask",
+    "description": "Assigns an IP address and a subnet mask",
+    "usage": ""
+  },
+  {
+    "name": "shutdown",
+    "description": "Used in interface configuration mode. Shuts down the interface",
+    "usage": ""
+  },
+  {
+    "name": "no shutdown",
+    "description": "Used in interface configuration mode. Brings up the interface.",
+    "usage": ""
+  },
+  {
+    "name": "ip default-gateway ip_address",
+    "description": "Sets the default gateway on a Cisco device",
+    "usage": ""
+  },
+  {
+    "name": "show running-config",
+    "description": "An enable mode command that displays the current configuration",
+    "usage": ""
+  },
+  {
+    "name": "description name-string",
+    "description": "A config interface command to describe or name an interface",
+    "usage": ""
+  },
+  {
+    "name": "show running-config interface interface slot/number",
+    "description": "An enable mode command to display the running configuration for a specific interface",
+    "usage": ""
+  },
+  {
+    "name": "show ip interface [type number]",
+    "description": "Displays the usability status of interfaces that are configured for IP",
+    "usage": ""
+  },
+  {
+    "name": "ip name-server serverip-1 serverip-2",
+    "description": "A configure mode command that sets the IP addresses of DNS servers",
+    "usage": ""
+  },
+  {
+    "name": "ping {hostname | system-address} [source source-address]",
+    "description": "Used in enable mode to diagnose basic network connectivity",
+    "usage": ""
+  },
+  {
+    "name": "speed {10 | 100 | 1000 | auto}",
+    "description": "An interface mode command that manually sets the speed to the specified value or negotiates it automatically",
+    "usage": ""
+  },
+  {
+    "name": "duplex {auto | full | half}",
+    "description": "An interface mode command that manually sets duplex to half, full or auto",
+    "usage": ""
+  },
+  {
+    "name": "cdp run",
+    "description": "A configuration mode command that enables Cisco Discovery Protocol (CDP) for the device",
+    "usage": ""
+  },
+  {
+    "name": "no cdp run",
+    "description": "A configuration mode command that disables Cisco Discovery Protocol (CDP) for the device",
+    "usage": ""
+  },
+  {
+    "name": "show mac address-table",
+    "description": "Displays the MAC address table",
+    "usage": ""
+  },
+  {
+    "name": "show cdp",
+    "description": "Shows whether CDP is enabled globally",
+    "usage": ""
+  },
+  {
+    "name": "show cdp neighbors[detail]",
+    "description": "Lists summary information about each neighbor connected to this device; the “detail” option lists detailed information about each neighbor",
+    "usage": ""
+  },
+  {
+    "name": "show interfaces",
+    "description": "Displays detailed information about interface status, settings and counters",
+    "usage": ""
+  },
+  {
+    "name": "show interface status",
+    "description": "Displays the interface line status",
+    "usage": ""
+  },
+  {
+    "name": "show interfaces switchport",
+    "description": "Displays a large variety of configuration settings and current operational status, including VLAN trunking details.",
+    "usage": ""
+  },
+  {
+    "name": "show interfaces trunk",
+    "description": "Lists information about the currently operational trunks and the VLANs supported by those trunks",
+    "usage": ""
+  },
+  {
+    "name": "show vlan",
+    "description": "Lists each VLAN and all interfaces assigned to that VLAN but does not include trunks",
+    "usage": ""
+  },
+  {
+    "name": "show vtp status",
+    "description": "Lists the current VTP status, including the current mode",
+    "usage": ""
+  },
+  {
+    "name": "ip routenetwork-number network-mask {ip-address | interface}",
+    "description": "Sets a static route in the IP routing table",
+    "usage": ""
+  },
+  {
+    "name": "router rip",
+    "description": "Enables a Routing Information Protocol (RIP) routing process, which places you in router configuration mode",
+    "usage": ""
+  },
+  {
+    "name": "network ip-address",
+    "description": "In router configuration mode, associates a network with a RIP routing process",
+    "usage": ""
+  },
+  {
+    "name": "version 2",
+    "description": "In router configuration mode, configures the software to receive and send only RIP version 2 packets",
+    "usage": ""
+  },
+  {
+    "name": "no auto-summary",
+    "description": "In router configuration mode, disables automatic summarization",
+    "usage": ""
+  },
+  {
+    "name": "default-information originate",
+    "description": "In router configuration mode, generates a default route into RIP",
+    "usage": ""
+  },
+  {
+    "name": "passive-interface interface",
+    "description": "In router configuration mode, sets only that interface to passive RIP mode. In passive RIP mode, RIP routing updates are accepted by, but not sent out of, the specified interface.",
+    "usage": ""
+  },
+  {
+    "name": "show ip rip database",
+    "description": "Displays the contents of the RIP routing database",
+    "usage": ""
+  },
+  {
+    "name": "ip nat [inside | outside]",
+    "description": "An interface configuration mode command to designate that traffic originating from or destined for the interface is subject to NAT",
+    "usage": ""
+  },
+  {
+    "name": "ip nat inside source {list{access-list-number | access-list-name}} interface type number[overload]",
+    "description": "A configuration mode command to establish dynamic source translation. Use of the “list” keyword enables you to use an ACL to identify the traffic that will be subject to NAT. The “overload” option enables the router to use one global address for many local addresses.",
+    "usage": ""
+  },
+  {
+    "name": "ip nat inside source static local-ip global-ip",
+    "description": "A configuration mode command to establish a static translation between an inside local address and an inside global address",
+    "usage": ""
+  },
+  {
+    "name": "vlan",
+    "description": "Creates a VLAN and enters VLAN configuration mode for further definitions",
+    "usage": ""
+  },
+  {
+    "name": "switchport access vlan",
+    "description": "Sets the VLAN that the interface belongs to.",
+    "usage": ""
+  },
+  {
+    "name": "switchport trunk encapsulation dot1q",
+    "description": "Specifies 802.1Q encapsulation on the trunk link.",
+    "usage": ""
+  },
+  {
+    "name": "switchport access",
+    "description": "Assigns this port to a VLAN",
+    "usage": ""
+  },
+  {
+    "name": "vlan vlan-id [name vlan-name]",
+    "description": "Configures a specific VLAN name (1 to 32 characters)",
+    "usage": ""
+  },
+  {
+    "name": "switchport mode { access | trunk }",
+    "description": "Configures the VLAN membership mode of a port. The access port is set to access unconditionally and operates as a non-trunking, single VLAN interface that sends and receives non-encapsulated (non-tagged) frames. An access port can be assigned to only one VLAN.\nThe trunk port sends and receives encapsulated (tagged) frames that identify the VLAN of origination. A trunk is a point-to-point link between two switches or between a switch and a router.",
+    "usage": ""
+  },
+  {
+    "name": "switchport trunk {encapsulation { dot1q }",
+    "description": "Sets the trunk characteristics when the interface is in trunking mode. In this mode, the switch supports simultaneous tagged and untagged traffic on a port.",
+    "usage": ""
+  },
+  {
+    "name": "encapsulation dot1q vlan-id",
+    "description": "A configuration mode command that defines the matching criteria to map 802.1Q frames ingress on an interface to the appropriate service instance\n ",
+    "usage": ""
+  },
+  {
+    "name": "ip address dhcp",
+    "description": "A configuration mode command to acquire an IP address on an interface via DHCP",
+    "usage": ""
+  },
+  {
+    "name": "ip dhcp pool name",
+    "description": "A configuration mode command to configure a DHCP address pool on a DHCP server and enter DHCP pool configuration mode",
+    "usage": ""
+  },
+  {
+    "name": "domain-name domain",
+    "description": "Used in DHCP pool configuration mode to specify the domain name for a DHCP client",
+    "usage": ""
+  },
+  {
+    "name": "network network-number [mask]",
+    "description": "Used in DHCP pool configuration mode to configure the network number and mask for a DHCP address pool primary or secondary subnet on a Cisco IOS DHCP server",
+    "usage": ""
+  },
+  {
+    "name": "ip dhcp excluded-address ip-address [last-ip-address]",
+    "description": "A configuration mode command to specify IP addresses that a DHCP server should not assign to DHCP clients",
+    "usage": ""
+  },
+  {
+    "name": "ip helper-address address",
+    "description": "An interface configuration mode command to enable forwarding of UDP broadcasts, including BOOTP, received on an interface",
+    "usage": ""
+  },
+  {
+    "name": "default-router address[address2 ... address8]",
+    "description": "Used in DHCP pool configuration mode to specify the default router list for a DHCP client",
+    "usage": ""
+  },
+  {
+    "name": "password pass-value",
+    "description": "Lists the password that is required if the login command (with no other parameters) is conﬁgured",
+    "usage": ""
+  },
+  {
+    "name": "username name password pass-value",
+    "description": "A global command that deﬁnes one of possibly multiple user names and associated passwords used for user authentication. It is used when the login local line conﬁguration command has been used.",
+    "usage": ""
+  },
+  {
+    "name": "enable password pass-value",
+    "description": "A configuration mode command that deﬁnes the password required when using the enable command",
+    "usage": ""
+  },
+  {
+    "name": "enable secretpass-value",
+    "description": "A configuration mode command that sets this Cisco device password that is required for any user to enter enable mode",
+    "usage": ""
+  },
+  {
+    "name": "service password-encryption",
+    "description": "A configuration mode command that directs the Cisco IOS software to encrypt the passwords, CHAP secrets, and similar data saved in its configuration file",
+    "usage": ""
+  },
+  {
+    "name": "ip domain-name name",
+    "description": "Conﬁgures a DNS domain name",
+    "usage": ""
+  },
+  {
+    "name": "crypto key generate rsa",
+    "description": "A configuration mode command that creates and stores (in a hidden location in ﬂash memory) the keys that are required by SSH",
+    "usage": ""
+  },
+  {
+    "name": "transport input {telnet | ssh}",
+    "description": "Used in vty line conﬁguration mode, deﬁnes whether Telnet or SSH access is allowed into this switch. Both values can be specified in a single command to allow both Telnet and SSH access (default settings).",
+    "usage": ""
+  },
+  {
+    "name": "logging ip address",
+    "description": "Configures the IP address of the host that will receive the system logging (syslog) messages",
+    "usage": ""
+  },
+  {
+    "name": "logging trap level",
+    "description": "Used in configuration mode to limit messages that are logged to the syslog servers based on severity. Specify the number or name of the desired severity level at which messages should be logged.",
+    "usage": ""
+  }
+]

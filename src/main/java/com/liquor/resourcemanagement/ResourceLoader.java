@@ -47,6 +47,9 @@ public class ResourceLoader {
     public static Optional<URL> getFXML(String name, Class context) {
         return getResourceFile(name, "fxml", context);
     }
+    public static Optional<URL> getJSON(String name) {
+        return getResourceFile(name, "json", Liquor.class);
+    }
 
     public static Optional<URL> getMP4(String name, Class context) {
         return getResourceFile(name, "mp4", context);

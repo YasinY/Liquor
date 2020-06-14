@@ -1,21 +1,16 @@
 - Design aller HTMLs fertigstellen
 
--- ÜBERALL, FOOTER --
+-----------nico---------------------------------------- <=3
+--authenticated--
+logout button
+authenticated "using vpn?" richtig formatieren (untereinander)
+
+--vpn--
+connected IP entfernen
+"Please reload this page to use the VPN functionality"
 
 
--- Dashboard --
-
--- VPN --
-
--- CISCO --
-
-
--- yasin --
+-- yasin -- <======3
 Cisco command auswählbar / anzeigbar
 Cisco commands hinzufügen
-
-ip abspeichern
-cities auswählbar machen
-remember me funktionailität
-
-remember me auf none setzen
+logout button funktionalität binden an button

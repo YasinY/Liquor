@@ -5,6 +5,7 @@ import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.functionality.theme.Theme;
 import com.liquor.launcher.functionality.timer.TaskManager;
+import com.liquor.launcher.model.CiscoCommandParser;
 import com.liquor.launcher.splashscreen.SplashScreen;
 import com.liquor.launcher.viewcontroller.IViewController;
 import com.liquor.launcher.viewcontroller.ViewControllerFactory;
@@ -259,6 +260,8 @@ public class Liquor extends Application {
 
     public static void main(String[] args) {
         //Privileges.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
+        CiscoCommandParser.parse();
+        System.exit(0);
         launch(args);
     }
 

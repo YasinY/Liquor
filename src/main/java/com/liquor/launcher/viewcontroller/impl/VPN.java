@@ -24,8 +24,12 @@ import java.util.Optional;
 @Slf4j
 public class VPN extends ViewController {
 
+
+    private Profile profile;
+
     public VPN(WebEngine webEngine) {
         super(webEngine);
+        ProfileManager.getInstance().getSelectedProfile().ifPresent(profile1 -> this.profile = profile1);
     }
 
     @Override
@@ -36,6 +40,13 @@ public class VPN extends ViewController {
         HTMLInputElement passwordInput = (HTMLInputElement) list.item(1);
         HTMLLabelElementImpl remember = (HTMLLabelElementImpl) document.getElementById("remember");
         HTMLLabelElementImpl dontRemember = (HTMLLabelElementImpl) document.getElementById("dontRemember");
+        if(profile != null) {
+            if(profile.isAuthenticated()) {
+                remember.setClassName(remember.getClassName() + " active");
+            } else {
+                dontRemember.setClassName(remember.getClassName() + " active");
+            }
+        }
 
         ((EventTarget) remember).addEventListener("click", getEventListener(dontRemember, remember, true), false);
 
@@ -105,9 +116,12 @@ public class VPN extends ViewController {
             profile.setAuthenticated(true);
             ProfileManager.getInstance().save(false);
         });
+        final HTMLElement rememberMeContainer = (HTMLElement) document.getElementById("rememberMeContainer");
         final HTMLElement loginContainer = (HTMLElement) document.getElementById("loginContainer");
         loginContainer.setClassName(String.format("%s %s", loginContainer.getClassName(), "d-none"));
+        rememberMeContainer.setClassName(String.format("%s %s", rememberMeContainer.getClassName(), "d-none"));
     }
+
 
     private String getValidInput(HTMLInputElement usernameInput) {
         return usernameInput.getValue() == null ? "" : usernameInput.getValue();

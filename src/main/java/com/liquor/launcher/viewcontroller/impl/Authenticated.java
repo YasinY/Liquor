@@ -1,5 +1,9 @@
 package com.liquor.launcher.viewcontroller.impl;
 
+import com.liquor.launcher.functionality.ip.IpChecker;
+import com.liquor.launcher.functionality.profile.Profile;
+import com.liquor.launcher.functionality.profile.ProfileManager;
+import com.liquor.launcher.model.CheckIpModel;
 import com.liquor.launcher.viewcontroller.ViewController;
 import com.liquor.prerequisites.openvpn.OpenVPNLocation;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
@@ -15,9 +19,11 @@ import org.w3c.dom.html.HTMLButtonElement;
 import org.w3c.dom.html.HTMLDivElement;
 import org.w3c.dom.html.HTMLElement;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -41,17 +47,20 @@ public class Authenticated extends ViewController {
     @Override
     public void load() {
         log.info("Loading authenticated...");
-        document.getElementById("assignedIp").setTextContent(Dashboard.IP_MODEL.getIpAddress());
-        document.getElementById("usingVPN").setTextContent(Dashboard.IP_MODEL.isUsingVpn() ? "Yes" : "No");
-        if (Dashboard.IP_MODEL.isUsingVpn()) {
+        refreshData();
 
-        }
         fillCities();
         NodeList cities = document.getElementsByTagName("a");
         assignCityActions(cities);
         addConnectButtonAction();
         addDisconnectButtonAction();
         hideDisconnect();
+    }
+
+    private void refreshData() {
+        CheckIpModel model = IpChecker.getInstance().refresh();
+        document.getElementById("assignedIp").setTextContent(model.getIpAddress());
+        document.getElementById("usingVPN").setTextContent(model.isUsingVpn() ? "Yes" : "No");
     }
 
     private void assignCityActions(NodeList cities) {
@@ -81,10 +90,17 @@ public class Authenticated extends ViewController {
             vpnConnection.destroyForcibly();
             try {
                 Runtime.getRuntime().exec("wmic process where \"name like '%openvpn%'\" delete");
-            } catch (IOException e) {
+                Thread.sleep(5000);
+                refreshData();
+            } catch (IOException | InterruptedException e) {
                 log.error("Couldnt run command to destroy openvpn process.");
             }
         }
+    }
+
+    private void logout() {
+        Optional<Profile> potentialProfile = ProfileManager.getInstance().getSelectedProfile();
+        potentialProfile.ifPresent(profile -> profile.setAuthenticated(false));
     }
 
     private void fillCities() {
@@ -125,6 +141,9 @@ public class Authenticated extends ViewController {
 
 
     private void connectToVpn() {
+        HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
+        connectButton.setTextContent("Connecting..");
+        connectButton.setDisabled(true);
         Runnable runnable = () -> {
             ProcessBuilder builder = new ProcessBuilder(
                     "cmd.exe", "/C", "openvpn.exe --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config " + selectedConfiguration + ".ovpn"
@@ -146,17 +165,21 @@ public class Authenticated extends ViewController {
                     if (line.contains("netsh command failed")) {
                         disconnect();
                         Platform.runLater(() -> {
+                            connectButton.setTextContent("Connect");
+                            connectButton.setDisabled(false);
                             playNotification(getErrorConnecting());
                         });
                         break;
                     }
                     if (line.contains("End ipconfig commands for register-dns...")) {
                         Platform.runLater(() -> {
-                            HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
+                            connectButton.setTextContent("Connect");
+                            connectButton.setDisabled(false);
                             HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
                             connectButton.setClassName(connectButton.getClassName() + " d-none");
                             disconnectButton.setClassName(disconnectButton.getClassName().replace("d-none", ""));
                             playNotification(getSuccessfulConnection());
+                            refreshData();
                         });
                     }
                     log.info(line);

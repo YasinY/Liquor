@@ -1,6 +1,7 @@
 package com.liquor.launcher.viewcontroller.impl;
 
 import com.google.gson.Gson;
+import com.liquor.launcher.functionality.ip.IpChecker;
 import com.liquor.launcher.functionality.profile.Profile;
 import com.liquor.launcher.functionality.profile.ProfileManager;
 import com.liquor.launcher.model.CheckIpModel;
@@ -20,19 +21,14 @@ import java.util.Scanner;
 public class Dashboard extends ViewController {
 
 
-    public static CheckIpModel IP_MODEL;
-    private Gson gson;
-
     public Dashboard(WebEngine webEngine) {
         super(webEngine);
-        gson = new Gson();
     }
 
     @SneakyThrows
     @Override
     public void load() {
-        CheckIpModel model = getCheckIpModel();
-        IP_MODEL = model;
+        CheckIpModel model = IpChecker.getInstance().refresh();
         NodeList paragraphs = document.getElementsByTagName("p");
         paragraphs.item(1).setTextContent(model.getIpAddress());
         paragraphs.item(3).setTextContent( model.getDns());
@@ -49,12 +45,4 @@ public class Dashboard extends ViewController {
 
     }
 
-    private CheckIpModel getCheckIpModel() throws IOException {
-        HttpsURLConnection request = (HttpsURLConnection) new URL("https://checkip.perfect-privacy.com/json").openConnection();
-        request.setRequestMethod("GET");
-        request.connect();
-        Scanner scannedInput = new Scanner(request.getInputStream()).useDelimiter("\\A");
-        String json = scannedInput.hasNext() ? scannedInput.next() : "";
-        return gson.fromJson(json, CheckIpModel.class);
-    }
 }
