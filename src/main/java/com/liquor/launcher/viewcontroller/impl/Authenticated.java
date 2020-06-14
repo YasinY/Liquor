@@ -5,6 +5,7 @@ import com.liquor.prerequisites.openvpn.OpenVPNLocation;
 import com.liquor.resourcemanagement.registered.RegisteredResource;
 import com.sun.webkit.dom.HTMLAnchorElementImpl;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.scene.web.WebEngine;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLButtonElement;
 import org.w3c.dom.html.HTMLDivElement;
+import org.w3c.dom.html.HTMLElement;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +31,7 @@ public class Authenticated extends ViewController {
 
     private String selectedConfiguration;
 
-    private PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
+    private PauseTransition transition = new PauseTransition(Duration.seconds(2));
 
 
     public Authenticated(WebEngine webEngine) {
@@ -40,12 +42,16 @@ public class Authenticated extends ViewController {
     public void load() {
         log.info("Loading authenticated...");
         document.getElementById("assignedIp").setTextContent(Dashboard.IP_MODEL.getIpAddress());
+        document.getElementById("usingVPN").setTextContent(Dashboard.IP_MODEL.isUsingVpn() ? "Yes" : "No");
+        if (Dashboard.IP_MODEL.isUsingVpn()) {
+
+        }
         fillCities();
         NodeList cities = document.getElementsByTagName("a");
         assignCityActions(cities);
         addConnectButtonAction();
         addDisconnectButtonAction();
-        document.getElementById("notificationContainer");
+        hideDisconnect();
     }
 
     private void assignCityActions(NodeList cities) {
@@ -57,7 +63,6 @@ public class Authenticated extends ViewController {
 
     private void addConnectButtonAction() {
         HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
-        HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
         ((EventTarget) connectButton).addEventListener("click", (connectEvent) -> {
             log.info("Connecting to VPN");
             connectToVpn();
@@ -139,10 +144,19 @@ public class Authenticated extends ViewController {
                     }
                     if (line.contains("netsh command failed")) {
                         disconnect();
+                        Platform.runLater(() -> {
+                            playNotification(getErrorConnecting());
+                        });
                         break;
                     }
                     if (line.contains("End ipconfig commands for register-dns...")) {
-
+                        Platform.runLater(() -> {
+                            HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
+                            HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
+                            connectButton.setClassName(connectButton.getClassName() + " d-none");
+                            disconnectButton.setClassName(disconnectButton.getClassName().replace("d-none", ""));
+                            playNotification(getSuccessConnecting());
+                        });
                     }
                     log.info(line);
                 } catch (IOException e) {
@@ -156,12 +170,52 @@ public class Authenticated extends ViewController {
             }
         };
         Thread thread = new Thread(runnable);
+        thread.setDaemon(true);
         thread.start();
 
     }
 
+    private void playNotification(HTMLElement notification) {
+        notify(notification);
+        handleNotificationPlayback(notification);
+    }
 
-    private void initDisconnectFunction() {
+    private void handleNotificationPlayback(HTMLElement notification) {
+        transition.setOnFinished((event1 -> hideNotification(notification)));
+        transition.play();
+    }
+
+    private void notify(HTMLElement notification) {
+        String className = notification.getClassName();
+        className = className.replace("d-none", "");
+        notification.setClassName(className);
+    }
+
+    private void hideNotification(HTMLElement notification) {
+        notification.setClassName(notification.getClassName() + " d-none");
+    }
+
+    private NodeList getAllNotifications() {
+        return document.getElementById("notificationContainer").getElementsByTagName("div");
+    }
+
+    private HTMLElement getSuccessfulConnection() {
+        return (HTMLElement) getAllNotifications().item(0);
+    }
+
+    private HTMLElement getErrorConnecting() {
+        return (HTMLElement) getAllNotifications().item(1);
+    }
+
+    private HTMLElement getSuccessConnecting() {
+        return (HTMLElement) getAllNotifications().item(2);
+    }
+
+    private HTMLElement getWrongCredentialsNotification() {
+        return (HTMLElement) getAllNotifications().item(3);
+    }
+
+    private void hideDisconnect() {
         HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
         HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
         ((EventTarget) disconnectButton).addEventListener("click", (disconnectEvent) -> {
