@@ -192,8 +192,6 @@ public class Liquor extends Application {
     @Override
     public void start(Stage currentStage) throws IOException {
         log.info("Starting application.. ");
-        FileSystem.ensureDirectories(RegisteredResource.AUTH);
-        OpenVPNResource.exportConfigurations(false); //TODO remove when prod
         startup(currentStage);
     }
 

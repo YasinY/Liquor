@@ -92,11 +92,6 @@
         </repository>
     </repositories>
     <dependencies>
-        <dependency>
-            <groupId>com.vnetpublishing.java</groupId>
-            <artifactId>super-user-application</artifactId>
-            <version>0.0.5</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
         <dependency>
             <groupId>org.openjfx</groupId>

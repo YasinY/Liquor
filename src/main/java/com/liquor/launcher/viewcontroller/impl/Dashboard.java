@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.NodeList;
 
 import javax.net.ssl.HttpsURLConnection;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.Scanner;
@@ -19,6 +20,7 @@ import java.util.Scanner;
 public class Dashboard extends ViewController {
 
 
+    public static CheckIpModel IP_MODEL;
     private Gson gson;
 
     public Dashboard(WebEngine webEngine) {
@@ -29,12 +31,8 @@ public class Dashboard extends ViewController {
     @SneakyThrows
     @Override
     public void load() {
-        HttpsURLConnection request = (HttpsURLConnection) new URL("https://checkip.perfect-privacy.com/json").openConnection();
-        request.setRequestMethod("GET");
-        request.connect();
-        Scanner scannedInput = new Scanner(request.getInputStream()).useDelimiter("\\A");
-        String json = scannedInput.hasNext() ? scannedInput.next() : "";
-        CheckIpModel model = gson.fromJson(json, CheckIpModel.class);
+        CheckIpModel model = getCheckIpModel();
+        IP_MODEL = model;
         NodeList paragraphs = document.getElementsByTagName("p");
         paragraphs.item(1).setTextContent(model.getIpAddress());
         paragraphs.item(3).setTextContent( model.getDns());
@@ -49,5 +47,14 @@ public class Dashboard extends ViewController {
         }
         log.info("Dashboard action taken");
 
+    }
+
+    private CheckIpModel getCheckIpModel() throws IOException {
+        HttpsURLConnection request = (HttpsURLConnection) new URL("https://checkip.perfect-privacy.com/json").openConnection();
+        request.setRequestMethod("GET");
+        request.connect();
+        Scanner scannedInput = new Scanner(request.getInputStream()).useDelimiter("\\A");
+        String json = scannedInput.hasNext() ? scannedInput.next() : "";
+        return gson.fromJson(json, CheckIpModel.class);
     }
 }

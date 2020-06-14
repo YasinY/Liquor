@@ -7,13 +7,11 @@ import com.sun.webkit.dom.HTMLAnchorElementImpl;
 import javafx.animation.PauseTransition;
 import javafx.scene.web.WebEngine;
 import javafx.util.Duration;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLButtonElement;
 import org.w3c.dom.html.HTMLDivElement;
-import org.w3c.dom.html.HTMLElement;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,8 +24,6 @@ import java.util.stream.Stream;
 @Slf4j
 public class Authenticated extends ViewController {
 
-
-    private Thread currentThread;
 
     private Process vpnConnection;
 
@@ -43,14 +39,13 @@ public class Authenticated extends ViewController {
     @Override
     public void load() {
         log.info("Loading authenticated...");
-        HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
-        HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
-
+        document.getElementById("assignedIp").setTextContent(Dashboard.IP_MODEL.getIpAddress());
         fillCities();
         NodeList cities = document.getElementsByTagName("a");
         assignCityActions(cities);
-        addConnectButtonAction(pauseTransition);
-        addDisconnectButtonAction((EventTarget) disconnectButton);
+        addConnectButtonAction();
+        addDisconnectButtonAction();
+        document.getElementById("notificationContainer");
     }
 
     private void assignCityActions(NodeList cities) {
@@ -60,30 +55,30 @@ public class Authenticated extends ViewController {
         });
     }
 
-    private void addConnectButtonAction(PauseTransition transition) {
+    private void addConnectButtonAction() {
         HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");
         HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
         ((EventTarget) connectButton).addEventListener("click", (connectEvent) -> {
-            connectButton.setClassName(String.format("%s %s", connectButton.getClassName(), "d-none"));
-            disconnectButton.setClassName(disconnectButton.getClassName().replace("d-none", ""));
-            initDisconnectFunction();
             log.info("Connecting to VPN");
             connectToVpn();
         }, false);
     }
 
-    private void addDisconnectButtonAction(EventTarget disconnectButton) {
-        disconnectButton.addEventListener("click", (disconnectEvent) -> {
-            if (vpnConnection != null) {
-                currentThread.interrupt();
-                vpnConnection.destroyForcibly();
-                try {
-                    Runtime.getRuntime().exec("wmic process where \"name like '%openvpn%'\" delete");
-                } catch (IOException e) {
-                    log.error("Couldnt run command to destroy openvpn process.");
-                }
-            }
+    private void addDisconnectButtonAction() {
+        ((EventTarget) document.getElementById("disconnectButton")).addEventListener("click", (disconnectEvent) -> {
+            disconnect();
         }, false);
+    }
+
+    private void disconnect() {
+        if (vpnConnection != null) {
+            vpnConnection.destroyForcibly();
+            try {
+                Runtime.getRuntime().exec("wmic process where \"name like '%openvpn%'\" delete");
+            } catch (IOException e) {
+                log.error("Couldnt run command to destroy openvpn process.");
+            }
+        }
     }
 
     private void fillCities() {
@@ -123,95 +118,48 @@ public class Authenticated extends ViewController {
     }
 
 
-    @SneakyThrows
     private void connectToVpn() {
-        Runnable runnable = new Runnable() {
-            @SneakyThrows
-            @Override
-            public void run() {
-                ProcessBuilder builder = new ProcessBuilder(
-                        "cmd.exe", "/C", "openvpn.exe --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config " + selectedConfiguration + ".ovpn"
-                );
-                System.out.println("Command: " + String.format("%s%s%s", "cmd.exe", "/C", "openvpn --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config " + selectedConfiguration + ".ovpn"));
-                builder.redirectErrorStream(true);
+        Runnable runnable = () -> {
+            ProcessBuilder builder = new ProcessBuilder(
+                    "cmd.exe", "/C", "openvpn.exe --cd " + RegisteredResource.AUTH.getFullDirectoryPath() + " --config " + selectedConfiguration + ".ovpn"
+            );
+            builder.redirectErrorStream(true);
+            try {
                 vpnConnection = builder.start();
-                BufferedReader r = new BufferedReader(new InputStreamReader(vpnConnection.getInputStream()));
-                String line;
-                while (true) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            BufferedReader r = new BufferedReader(new InputStreamReader(vpnConnection.getInputStream()));
+            String line;
+            while (true) {
+                try {
                     line = r.readLine();
                     if (line == null) {
                         break;
                     }
                     if (line.contains("netsh command failed")) {
-                        handleFailedNotification();
+                        disconnect();
+                        break;
                     }
                     if (line.contains("End ipconfig commands for register-dns...")) {
-                        handleSuccessfulConnect();
+
                     }
                     log.info(line);
-                }
-                try {
-                    vpnConnection.waitFor();
-                } catch (InterruptedException e) {
-                    log.info("Disconnected!");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
+            try {
+                vpnConnection.waitFor();
+            } catch (InterruptedException e) {
+                log.info("Disconnected!");
+            }
         };
-        currentThread = new Thread(runnable);
-        currentThread.setDaemon(true);
-        currentThread.start();
+        Thread thread = new Thread(runnable);
+        thread.start();
+
     }
 
-    private void playNotification(HTMLElement notification) {
-        notify(notification);
-        handleNotificationPlayback(notification);
-    }
-
-    private void handleNotificationPlayback(HTMLElement notification) {
-        pauseTransition.setOnFinished((event1 -> hideNotification(notification)));
-        pauseTransition.play();
-    }
-
-    private void hideNotification(HTMLElement notification) {
-        notification.setClassName(notification.getClassName() + " d-none");
-    }
-
-    private void handleSuccessfulConnect() {
-        HTMLElement notification = getSuccessfullyConnected();
-        playNotification(notification);
-    }
-
-    private void handleFailedNotification() {
-        HTMLElement notification = getErrorConnecting();
-        playNotification(notification);
-    }
-
-    private void handleSuccessfulDisconnect() {
-        HTMLElement notification = getSuccessfullDisconnect();
-        notify(notification);
-    }
-
-    private void notify(HTMLElement notification) {
-        String className = notification.getClassName();
-        className = className.replace("d-none", "");
-        notification.setClassName(className);
-    }
-
-    private NodeList getAllNotifications() {
-        return document.getElementById("notificationContainer").getElementsByTagName("div");
-    }
-
-    private HTMLElement getSuccessfullyConnected() {
-        return (HTMLElement) getAllNotifications().item(0);
-    }
-
-    private HTMLElement getErrorConnecting() {
-        return (HTMLElement) getAllNotifications().item(1);
-    }
-
-    private HTMLElement getSuccessfullDisconnect() {
-        return (HTMLElement) getAllNotifications().item(2);
-    }
 
     private void initDisconnectFunction() {
         HTMLButtonElement connectButton = (HTMLButtonElement) document.getElementById("connectButton");

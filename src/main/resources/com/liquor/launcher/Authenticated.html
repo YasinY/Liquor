@@ -31,7 +31,7 @@
 
             <!-- Current IP -->
             <div class="d-flex justify-content-center">
-                <h6 class="OwnTXT">Current IP: <span class="badge badge-info">88.8.888.888</span></h6>
+                <h6 class="OwnTXT">Current IP: <span class="badge badge-info" id="assignedIp">88.8.888.888</span></h6>
             </div>
 
             <!-- Provider and City List-->
@@ -57,13 +57,13 @@
             <!-- Connect Feedback -->
             <div class="d-flex justify-content-center">
                 <div id="notificationContainer" style="font-size: 12px;">
-                    <div class="alert alert-success d-none" role="alert">
+                    <div class="alert alert-success d-none" role="alert" id="successConnecting">
                         Successfully connected.
                     </div>
-                    <div class="alert alert-error d-none" role="alert">
+                    <div class="alert alert-error d-none" role="alert" id="errorConnecting">
                         Error connecting. Make sure you ran with elevated privileges.
                     </div>
-                    <div class="alert alert-success d-none" role="alert">
+                    <div class="alert alert-success d-none" role="alert" id="successDisconnecting">
                         Successfully disconnected.
                     </div>
                 </div>
