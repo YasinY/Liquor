@@ -101,6 +101,7 @@ public class VPN extends ViewController {
             handleRequest(checkCredentialsButton, transition, successful);
             if (successful) {
                 handleSuccessful(username, password);
+
             }
         };
     }
@@ -118,8 +119,10 @@ public class VPN extends ViewController {
         });
         final HTMLElement rememberMeContainer = (HTMLElement) document.getElementById("rememberMeContainer");
         final HTMLElement loginContainer = (HTMLElement) document.getElementById("loginContainer");
+        final HTMLElement reloadNotification = ((HTMLElement) document.getElementById("reloadNotification"));
         loginContainer.setClassName(String.format("%s %s", loginContainer.getClassName(), "d-none"));
         rememberMeContainer.setClassName(String.format("%s %s", rememberMeContainer.getClassName(), "d-none"));
+        reloadNotification.setClassName(reloadNotification.getClassName().replace("d-none", " "));
     }
 
 

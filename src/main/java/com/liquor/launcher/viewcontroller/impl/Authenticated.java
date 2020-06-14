@@ -54,7 +54,14 @@ public class Authenticated extends ViewController {
         assignCityActions(cities);
         addConnectButtonAction();
         addDisconnectButtonAction();
+        addLogoutButtonAction();
         hideDisconnect();
+    }
+
+    private void addLogoutButtonAction() {
+        ((EventTarget) document.getElementById("logoutButton")).addEventListener("click", (event) -> {
+            logout();
+        }, false);
     }
 
     private void refreshData() {
