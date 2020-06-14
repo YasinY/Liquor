@@ -72,6 +72,7 @@ public class Authenticated extends ViewController {
     private void addDisconnectButtonAction() {
         ((EventTarget) document.getElementById("disconnectButton")).addEventListener("click", (disconnectEvent) -> {
             disconnect();
+            playNotification(getSuccessfulDisconnect());
         }, false);
     }
 
@@ -155,7 +156,7 @@ public class Authenticated extends ViewController {
                             HTMLButtonElement disconnectButton = (HTMLButtonElement) document.getElementById("disconnectButton");
                             connectButton.setClassName(connectButton.getClassName() + " d-none");
                             disconnectButton.setClassName(disconnectButton.getClassName().replace("d-none", ""));
-                            playNotification(getSuccessConnecting());
+                            playNotification(getSuccessfulConnection());
                         });
                     }
                     log.info(line);
@@ -207,12 +208,8 @@ public class Authenticated extends ViewController {
         return (HTMLElement) getAllNotifications().item(1);
     }
 
-    private HTMLElement getSuccessConnecting() {
+    private HTMLElement getSuccessfulDisconnect() {
         return (HTMLElement) getAllNotifications().item(2);
-    }
-
-    private HTMLElement getWrongCredentialsNotification() {
-        return (HTMLElement) getAllNotifications().item(3);
     }
 
     private void hideDisconnect() {
