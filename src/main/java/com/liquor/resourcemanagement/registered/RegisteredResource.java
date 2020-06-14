@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 public enum RegisteredResource {
-    PROFILE("currentprofile", "lqp", "profile", "suck", "a", "cock"),
+    PROFILE("currentprofile", "lqp", "profile"),
     AUTH("auth", "txt", "config");
     private String name;
     private String extension;
