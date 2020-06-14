@@ -261,7 +261,7 @@ public class Liquor extends Application {
     public static void main(String[] args) {
         //Privileges.setProperty("javafx.preloader", SplashScreen.class.getCanonicalName());
         CiscoCommandParser.initialize().load();
-        System.exit(0);
+        //System.exit(0);
         launch(args);
     }
 
